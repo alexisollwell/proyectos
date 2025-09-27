@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:proyectos/models/access/alumn_request.dart';
+import 'package:proyectos/models/access/login_request.dart';
 
 void main() {
   runApp(const MyApp());
@@ -55,6 +57,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  // LoginRequest request = LoginRequest(password: "password", user: "user");
+
+  AlumnoRequest request = AlumnoRequest(
+    id: 0,
+    matricula: 4,
+    listadoDeMatriculas: [],
+    estaActivo: false,
+  );
 
   void _incrementCounter() {
     setState(() {
