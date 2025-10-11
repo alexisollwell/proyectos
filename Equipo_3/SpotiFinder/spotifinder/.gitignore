@@ -1,0 +1,39 @@
+# Flutter / Dart
+.dart_tool/
+.buildlog/
+.packages
+.pub/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-versions
+.idea/
+.vscode/
+build/
+**/ios/Flutter/Flutter.podspec
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+
+# Android
+*.iml
+*.apk
+*.aab
+*.gradle
+**/gradle-wrapper.jar
+**/local.properties
+
+# Node backend
+backend/node_modules/
+backend/.env
+backend/npm-debug.log
+backend/package-lock.json
+
+# VSCode
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
