@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class AlumnoRequest {
   int? id, matricula;
   List<String> listadoDeMatriculas;
