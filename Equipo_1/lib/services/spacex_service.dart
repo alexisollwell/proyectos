@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:equipo1_practica5/constants.dart';
-import 'package:equipo1_practica5/models/spacex_model.dart';
+import 'package:proyectos/constants.dart';
+import 'package:proyectos/models/spacex_model.dart';
 
 Future<Constelacion> getConstelacion(double lat, double lng) async {
   try {
@@ -34,3 +34,4 @@ Future<Constelacion> getConstelacion(double lat, double lng) async {
     );
   }
 }
+
