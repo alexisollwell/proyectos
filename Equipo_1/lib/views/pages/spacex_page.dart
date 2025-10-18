@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:equipo1_practica5/models/spacex_model.dart';
-import 'package:equipo1_practica5/services/spacex_service.dart';
+import 'package:proyectos/models/spacex_model.dart';
+import 'package:proyectos/services/spacex_service.dart';
 
 class PaginaConstelacion extends StatefulWidget {
   final double latitude;
@@ -136,3 +136,4 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
     );
   }
 }
+
