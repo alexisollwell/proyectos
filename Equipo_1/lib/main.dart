@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:proyectos/views/pages/login_page.dart';
 import 'views/pages/users_page.dart';
 import 'views/pages/spacex_page.dart';
 import 'views/pages/ipinfo_page.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Proyecto APIs',
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
