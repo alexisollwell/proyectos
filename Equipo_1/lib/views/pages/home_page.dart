@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:proyectos/services/constelacion_ar.dart';
 import 'package:proyectos/views/pages/ipinfo_page.dart';
+import 'package:proyectos/views/pages/location_page_integrada.dart';
 import 'package:proyectos/views/pages/spacex_page.dart';
 import 'package:proyectos/views/pages/users_page.dart';
 
@@ -121,15 +122,19 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     const SizedBox(height: 20),
+                    // En tu HomePage, reemplaza la opción de IPInfo por:
                     _buildOpcionMenu(
-                      icono: FontAwesomeIcons.locationDot,
-                      titulo: "Mi ubicación - IPInfo",
-                      descripcion: "Consulta tu ubicación actual",
-                      colorFondo: const Color.fromARGB(255, 212, 220, 240),
+                      icono: FontAwesomeIcons.mapLocationDot,
+                      titulo: "Geolocalización & Mapa",
+                      descripcion: "Tu ubicación IP y mapa integrados",
+                      colorFondo: const Color.fromARGB(255, 161, 167, 254),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => IpInfoPage()),
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const IntegratedLocationPage(),
+                          ),
                         );
                       },
                     ),

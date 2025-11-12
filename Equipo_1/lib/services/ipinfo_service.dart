@@ -3,16 +3,31 @@ import 'package:http/http.dart' as http;
 import '../models/ipinfo_model.dart';
 import '../constants.dart';
 
-Future<IpInfo> getIpInfo() async {
-  try {
-    final res = await http.get(Uri.parse(ipInfoUrl));
-    if (res.statusCode == 200) {
-      var jsonResponse = json.decode(res.body);
-      return IpInfo.fromJson(jsonResponse);
-    } else {
-      return IpInfo(ip: "Error al obtener datos");
+class IpInfoService {
+  static IpInfo? _ipInfoCache;
+
+  static IpInfo? get ipInfoCache => _ipInfoCache;
+
+  Future<IpInfo> getIpInfo() async {
+    try {
+      final response = await http.get(
+        Uri.parse(ipInfoUrl),
+        headers: {'Accept': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        _ipInfoCache = IpInfo.fromJson(jsonResponse);
+        return _ipInfoCache!;
+      } else {
+        throw Exception('Error HTTP: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de conexión: $e');
     }
-  } catch (e) {
-    return IpInfo(ip: e.toString());
   }
+}
+
+Future<IpInfo> getIpInfo() async {
+  return await IpInfoService().getIpInfo();
 }
