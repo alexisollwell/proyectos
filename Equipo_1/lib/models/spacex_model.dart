@@ -23,13 +23,11 @@ class Constelacion {
     this.tipo = 'planeta',
   });
 
-  // Método para extraer solo el nombre en español
   String get nombreSoloEspanol {
     final index = nombre.indexOf(' (');
     return index > 0 ? nombre.substring(0, index) : nombre;
   }
 
-  // Método para extraer solo el nombre en inglés
   String get nombreSoloIngles {
     final startIndex = nombre.indexOf('(');
     final endIndex = nombre.indexOf(')');
@@ -75,7 +73,6 @@ class Constelacion {
         : Icons.visibility_off;
   }
 
-  // Color según el tipo de cuerpo celeste
   Color get colorTipo {
     switch (tipo) {
       case 'estrella':
@@ -93,7 +90,6 @@ class Constelacion {
     }
   }
 
-  // Icono específico para cada cuerpo celeste
   IconData get iconoPlaneta {
     final nombreEspanol = nombreSoloEspanol.toLowerCase();
 
@@ -123,3 +119,4 @@ class Constelacion {
     }
   }
 }
+
