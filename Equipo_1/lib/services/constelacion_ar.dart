@@ -15,21 +15,19 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
   bool _isCameraInitialized = false;
-  double _azimuth = 0.0; // Azimut del teléfono (en radianes, 0 a 2*PI)
-  double _pitch = 0.0; // Altitud del teléfono (en radianes, -PI/2 a PI/2)
+  double _azimuth = 0.0; 
+  double _pitch = 0.0;
   double _roll = 0.0;
   Position? _currentPosition;
   String _constelacionFiltro = "Todas";
 
-  // Define el Campo de Visión (Field of View) horizontal de la cámara.
-  // 60 grados = pi/3. Puedes ajustar esto.
   final double _fovHorizontal = pi / 3;
 
   @override
   void initState() {
     super.initState();
     _initializeCamera();
-    _startSensors(); // <--- USA LA FUNCIÓN CORREGIDA
+    _startSensors(); 
     _getCurrentLocation();
   }
 
@@ -50,32 +48,17 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     }
   }
 
-  // --- ¡FUNCIÓN CORREGIDA! ---
-  // Lee los sensores correctos para Azimut y Altitud
   void _startSensors() {
-    // Escucha el acelerómetro para el PITCH (Altitud)
     accelerometerEvents.listen((AccelerometerEvent event) {
       setState(() {
-        // Calculamos el pitch (altitud) usando la gravedad.
-        // atan2(z, -y) nos da el ángulo en radianes.
-        // 0 rad = horizonte
-        // 1.57 rad (PI/2) = apuntando al cielo (cenit)
-        // -1.57 rad (-PI/2) = apuntando al suelo (nadir)
         _pitch = atan2(event.z, -event.y);
-
-        // También calculamos el roll (inclinación lateral)
         _roll = atan2(event.x, -event.y);
       });
     });
-
-    // Escucha el magnetómetro para el AZIMUT (Brújula)
     magnetometerEvents.listen((MagnetometerEvent event) {
       setState(() {
-        // Calculamos el azimut (dirección de la brújula) usando
-        // los ejes X e Y del magnetómetro.
         double azimuthRad = atan2(event.y, event.x);
 
-        // Convertimos nuestro rango de -PI a +PI a un rango de 0 a 2*PI.
         if (azimuthRad < 0) {
           azimuthRad += 2 * pi;
         }
@@ -84,7 +67,6 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
       });
     });
   }
-  // --- FIN DE LA FUNCIÓN CORREGIDA ---
 
   Future<void> _getCurrentLocation() async {
     try {
@@ -122,30 +104,14 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
           .where((constelacion) => constelacion.nombre == _constelacionFiltro)
           .toList();
     }
-
-    // Devuelve todas las constelaciones filtradas (el Painter decidirá qué dibujar)
-    // Opcional: podrías mantener tu lógica _esConstelacionVisible si quieres
-    // optimizar y no enviar constelaciones muy lejanas al Painter.
     return constelacionesFiltradas;
-
-    /* // Tu lógica original (la comento por ahora, el Painter ya lo maneja)
-    return constelacionesFiltradas.where((constelacion) {
-       return _esConstelacionVisible(constelacion);
-     }).toList();
-    */
   }
-
-  // Esta función ahora es menos crítica porque el Painter
-  // calcula la posición exacta, pero puede servir para optimizar.
   bool _esConstelacionVisible(Constelacion constelacion) {
-    // Aumentamos el rango para "capturar" constelaciones
-    // que estén cerca del borde de la pantalla.
-    final fovHorizontal = _fovHorizontal * 1.5; // Un 50% más grande
-    final fovVertical = (pi / 4) * 1.5; // Asumimos un FOV vertical
+    final fovHorizontal = _fovHorizontal * 1.5;
+    final fovVertical = (pi / 4) * 1.5;
 
     double diferenciaAzimuth = (_azimuth - constelacion.coordinates.azimuth)
         .abs();
-    // Manejar el "wrap-around" del círculo (ej. 359° y 1°)
     if (diferenciaAzimuth > pi) {
       diferenciaAzimuth = (2 * pi) - diferenciaAzimuth;
     }
@@ -153,7 +119,6 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     final diferenciaAltitud = (_pitch - constelacion.coordinates.altitude)
         .abs();
 
-    // Comprueba si está dentro del campo de visión (FOV)
     return diferenciaAzimuth < (fovHorizontal / 2) &&
         diferenciaAltitud < (fovVertical / 2);
   }
@@ -177,7 +142,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
       body: Stack(
         children: [
           if (_isCameraInitialized) CameraPreview(_controller!),
-          _buildConstellationsOverlay(), // <--- MODIFICADO
+          _buildConstellationsOverlay(), 
           _buildControls(),
           _buildConstellationSelector(),
           _buildDebugInfo(),
@@ -186,14 +151,10 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     );
   }
 
-  // --- WIDGET MODIFICADO ---
-  // Ahora calcula la escala de la pantalla y la pasa al Painter.
   Widget _buildConstellationsOverlay() {
     final constelacionesVisibles = _getVisibleConstellations();
     final screenWidth = MediaQuery.of(context).size.width;
 
-    // Calcula la escala: cuántos píxeles por radián.
-    // Esto es crucial para la proyección.
     final double scale = screenWidth / _fovHorizontal;
 
     return SizedBox(
@@ -202,14 +163,13 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
       child: CustomPaint(
         painter: ConstelacionPainter(
           constelaciones: constelacionesVisibles,
-          azimuth: _azimuth, // Az del teléfono
-          pitch: _pitch, // Pitch del teléfono
-          scale: scale, // Píxeles por radián
+          azimuth: _azimuth,
+          pitch: _pitch,
+          scale: scale, 
         ),
       ),
     );
   }
-  // --- FIN DE WIDGET MODIFICADO ---
 
   Widget _buildControls() {
     return Positioned(
@@ -311,7 +271,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Convertimos radianes a grados para que sea más fácil de leer
+            
             Text(
               'Az: ${(_azimuth * 180 / pi).toStringAsFixed(1)}°',
               style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -334,20 +294,11 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     );
   }
 }
-
-// --- CLASE PAINTER TOTALMENTE CORREGIDA ---
-// Esta clase ahora proyecta correctamente las coordenadas (Az, Alt)
-// a la pantalla (x, y) usando la orientación del teléfono.
 class ConstelacionPainter extends CustomPainter {
   final List<Constelacion> constelaciones;
-  final double azimuth; // Azimut del teléfono
-  final double pitch; // Pitch (altitud) del teléfono
-  final double scale; // Píxeles por radián (calculado desde el FOV)
-
-  // Las coordenadas (x,y) de tus estrellas son muy grandes.
-  // Este factor las reduce para que actúen como pequeños
-  // offsets en radianes desde el centro de la constelación.
-  // ¡Puedes ajustar este valor!
+  final double azimuth;
+  final double pitch;
+  final double scale; 
   final double starCoordinateScale = 0.05;
 
   ConstelacionPainter({
@@ -380,19 +331,13 @@ class ConstelacionPainter extends CustomPainter {
     final starPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
-
-    // Almacena las posiciones calculadas para dibujar las líneas
     final Map<int, Offset> starPositions = {};
     bool isAnyStarOnScreen = false;
-
-    // 1. Calcula la posición de todas las estrellas
     for (int i = 0; i < constelacion.estrellas.length; i++) {
       final estrella = constelacion.estrellas[i];
 
-      // Calcula la posición de la estrella en la pantalla
       final posicion = _calculateStarPosition(center, constelacion, estrella);
 
-      // Comprueba si la estrella está dentro de la pantalla
       if (posicion.dx > 0 &&
           posicion.dx < size.width &&
           posicion.dy > 0 &&
@@ -402,16 +347,12 @@ class ConstelacionPainter extends CustomPainter {
         isAnyStarOnScreen = true;
       }
     }
-
-    // 2. Dibuja las conexiones (líneas)
     for (int i = 0; i < constelacion.estrellas.length; i++) {
-      // Si la estrella actual está en pantalla
       if (starPositions.containsKey(i)) {
         final startPos = starPositions[i]!;
         final estrella = constelacion.estrellas[i];
 
         for (final connectedIndex in estrella.connections) {
-          // Si la estrella conectada también está en pantalla
           if (starPositions.containsKey(connectedIndex)) {
             final connectedPos = starPositions[connectedIndex]!;
             canvas.drawLine(startPos, connectedPos, paint);
@@ -419,8 +360,6 @@ class ConstelacionPainter extends CustomPainter {
         }
       }
     }
-
-    // 3. Dibuja el nombre (basado en la primera estrella)
     if (isAnyStarOnScreen && starPositions.containsKey(0)) {
       _drawText(
         canvas,
@@ -430,32 +369,21 @@ class ConstelacionPainter extends CustomPainter {
     }
   }
 
-  // --- ¡NUEVA LÓGICA DE PROYECCIÓN! ---
   Offset _calculateStarPosition(
     Offset center,
     Constelacion constelacion,
     Estrella estrella,
   ) {
-    // 1. Calcula la coordenada "mundial" (Az/Alt) de la estrella
-    // Usamos starCoordinateScale para reducir tus valores x/y
     final double starAz =
         constelacion.coordinates.azimuth + (estrella.x * starCoordinateScale);
     final double starAlt =
         constelacion.coordinates.altitude + (estrella.y * starCoordinateScale);
-
-    // 2. Calcula la diferencia angular con el centro del teléfono
-    double deltaAz = starAz - azimuth; // this.azimuth es el Az del teléfono
-    double deltaAlt = starAlt - pitch; // this.pitch es el Pitch del teléfono
-
-    // 3. Maneja el 'wrap-around' del azimut (ej. de 359° a 1°)
-    // Si la diferencia es más de 180°, toma el camino corto
+    double deltaAz = starAz - azimuth;
+    double deltaAlt = starAlt - pitch; 
     if (deltaAz > pi) deltaAz -= 2 * pi;
     if (deltaAz < -pi) deltaAz += 2 * pi;
-
-    // 4. Convierte la diferencia angular (radianes) a píxeles
-    // Usamos 'scale' (píxeles por radián)
     final x = center.dx + (deltaAz * scale);
-    final y = center.dy - (deltaAlt * scale); // Eje Y invertido en pantalla
+    final y = center.dy - (deltaAlt * scale); 
 
     return Offset(x, y);
   }
@@ -486,9 +414,7 @@ class ConstelacionPainter extends CustomPainter {
       oldDelegate.pitch != pitch ||
       oldDelegate.constelaciones != constelaciones;
 }
-// --- FIN DE LA CLASE PAINTER CORREGIDA ---
 
-// --- Tus clases de datos (sin cambios) ---
 class Constelacion {
   final String nombre;
   final List<Estrella> estrellas;
@@ -516,16 +442,12 @@ class Estrella {
 }
 
 class CoordenadasCelestiales {
-  final double altitude; // En radianes
-  final double azimuth; // En radianes
+  final double altitude; 
+  final double azimuth; 
 
   CoordenadasCelestiales({required this.altitude, required this.azimuth});
 }
 
-// Lista completa de constelaciones
-// TUS DATOS ORIGINALES (sin cambios)
-// ¡Todas las constelaciones que mencionaste SÍ están en esta lista!
-// (Casiopea, Escorpio, Lyra, Cruz del Sur, Geminis, Acuario, Capricornio, Sagitario)
 final _constelaciones = [
   Constelacion(
     nombre: "Osa Mayor",
