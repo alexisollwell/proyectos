@@ -481,21 +481,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       child: Row(
         children: [
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: _loadLocationData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 55, 66, 137),
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              icon: const FaIcon(FontAwesomeIcons.arrowsRotate, size: 16),
-              label: const Text('Actualizar'),
-            ),
-          ),
           const SizedBox(width: 10),
           Expanded(
             child: ElevatedButton.icon(

@@ -90,9 +90,9 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   children: [
                     _buildOpcionMenu(
-                      icono: FontAwesomeIcons.users,
-                      titulo: "Usuarios - Regres",
-                      descripcion: "Gestión de usuarios del sistema",
+                      icono: FontAwesomeIcons.camera,
+                      titulo: "Realidad Aumentada",
+                      descripcion: "Visualiza constelaciones con tu cámara",
                       colorFondo: const Color.fromARGB(255, 161, 167, 254),
                       onTap: () {
                         Navigator.push(
@@ -104,19 +104,18 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     const SizedBox(height: 20),
+                    // En tu HomePage, actualiza la opción de constelaciones:
                     _buildOpcionMenu(
                       icono: FontAwesomeIcons.star,
                       titulo: "Ver Constelación Visible",
-                      descripcion: "Observa las constelaciones actuales",
+                      descripcion:
+                          "Observa las constelaciones actuales según tu ubicación",
                       colorFondo: const Color.fromARGB(255, 180, 200, 236),
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => PaginaConstelacion(
-                              latitude: 32.5149,
-                              longitude: -117.0382,
-                            ),
+                            builder: (context) => const PaginaConstelacion(),
                           ),
                         );
                       },

@@ -10,6 +10,8 @@ class IpInfoService {
 
   Future<IpInfo> getIpInfo() async {
     try {
+      print('🌐 Obteniendo información de IP...');
+
       final response = await http.get(
         Uri.parse(ipInfoUrl),
         headers: {'Accept': 'application/json'},
@@ -18,12 +20,17 @@ class IpInfoService {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         _ipInfoCache = IpInfo.fromJson(jsonResponse);
+
+        print('✅ IPInfo obtenido: ${_ipInfoCache!.ip}');
+        print('✅ Ubicación: ${_ipInfoCache!.ciudad}, ${_ipInfoCache!.pais}');
+
         return _ipInfoCache!;
       } else {
-        throw Exception('Error HTTP: ${response.statusCode}');
+        throw Exception('Error HTTP al obtener IPInfo: ${response.statusCode}');
       }
     } catch (e) {
-      throw Exception('Error de conexión: $e');
+      print('❌ Error obteniendo IPInfo: $e');
+      rethrow;
     }
   }
 }
