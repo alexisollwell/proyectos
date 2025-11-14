@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:proyectos/models/spacex_model.dart';
 import 'package:proyectos/services/spacex_service.dart';
-import 'package:proyectos/services/location_service.dart';
 
 class PaginaConstelacion extends StatefulWidget {
   const PaginaConstelacion({super.key});

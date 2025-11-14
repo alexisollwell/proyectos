@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:proyectos/services/constelacion_ar.dart';
-import 'package:proyectos/views/pages/ipinfo_page.dart';
 import 'package:proyectos/views/pages/location_page_integrada.dart';
 import 'package:proyectos/views/pages/spacex_page.dart';
-import 'package:proyectos/views/pages/users_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

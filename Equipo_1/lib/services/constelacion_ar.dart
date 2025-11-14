@@ -196,7 +196,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     // Esto es crucial para la proyección.
     final double scale = screenWidth / _fovHorizontal;
 
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: double.infinity,
       child: CustomPaint(
@@ -253,7 +253,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
       bottom: 80,
       left: 0,
       right: 0,
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
@@ -444,10 +444,8 @@ class ConstelacionPainter extends CustomPainter {
         constelacion.coordinates.altitude + (estrella.y * starCoordinateScale);
 
     // 2. Calcula la diferencia angular con el centro del teléfono
-    double deltaAz =
-        starAz - this.azimuth; // this.azimuth es el Az del teléfono
-    double deltaAlt =
-        starAlt - this.pitch; // this.pitch es el Pitch del teléfono
+    double deltaAz = starAz - azimuth; // this.azimuth es el Az del teléfono
+    double deltaAlt = starAlt - pitch; // this.pitch es el Pitch del teléfono
 
     // 3. Maneja el 'wrap-around' del azimut (ej. de 359° a 1°)
     // Si la diferencia es más de 180°, toma el camino corto
@@ -456,9 +454,8 @@ class ConstelacionPainter extends CustomPainter {
 
     // 4. Convierte la diferencia angular (radianes) a píxeles
     // Usamos 'scale' (píxeles por radián)
-    final x = center.dx + (deltaAz * this.scale);
-    final y =
-        center.dy - (deltaAlt * this.scale); // Eje Y invertido en pantalla
+    final x = center.dx + (deltaAz * scale);
+    final y = center.dy - (deltaAlt * scale); // Eje Y invertido en pantalla
 
     return Offset(x, y);
   }
