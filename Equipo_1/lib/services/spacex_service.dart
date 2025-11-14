@@ -65,14 +65,11 @@ class ConstellationService {
         print('✅ Cuerpo celeste obtenido: ${cuerpo.nombre}');
       } catch (e) {
         print('❌ Error obteniendo cuerpo $cuerpoId: $e');
-        // Agregar versión local si falla la API
         final cuerpoLocal = _crearCuerpoCelesteLocal(cuerpoId);
         if (cuerpoLocal != null) {
           todosLosCuerpos.add(cuerpoLocal);
         }
       }
-
-      // Pequeña pausa entre requests
       await Future.delayed(const Duration(milliseconds: 100));
     }
 
@@ -117,7 +114,6 @@ class ConstellationService {
         throw Exception('Error ${response.statusCode}');
       }
     } catch (e) {
-      // Si falla la API, crear versión local
       final cuerpoLocal = _crearCuerpoCelesteLocal(cuerpoId);
       if (cuerpoLocal != null) {
         return cuerpoLocal;
@@ -137,8 +133,6 @@ class ConstellationService {
     if (cuerpoInfo == null) {
       throw Exception('Cuerpo celeste no encontrado');
     }
-
-    // Extraer nombre inglés de la respuesta si está disponible
     String nombreEnIngles = cuerpoInfo['en']!;
     try {
       if (response is Map<String, dynamic> && response['data'] != null) {
@@ -220,8 +214,6 @@ class ConstellationService {
     if (nombre == 'Sol') {
       return horaActual >= 6 && horaActual <= 18;
     }
-
-    // Para otros cuerpos celestes, asumir visibilidad nocturna
     return horaActual >= 18 || horaActual <= 6;
   }
 
@@ -484,8 +476,8 @@ class ConstellationService {
   }
 }
 
-// Función legacy para compatibilidad
 Future<Constelacion> getConstelacion(double lat, double lng) async {
   final planetas = await ConstellationService.obtenerTodosLosPlanetas();
   return planetas.first;
 }
+
