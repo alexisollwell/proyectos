@@ -102,7 +102,6 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // En tu HomePage, actualiza la opción de constelaciones:
                     _buildOpcionMenu(
                       icono: FontAwesomeIcons.star,
                       titulo: "Ver Constelación Visible",
@@ -119,7 +118,6 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // En tu HomePage, reemplaza la opción de IPInfo por:
                     _buildOpcionMenu(
                       icono: FontAwesomeIcons.mapLocationDot,
                       titulo: "Geolocalización & Mapa",
