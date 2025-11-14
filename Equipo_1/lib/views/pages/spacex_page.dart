@@ -231,10 +231,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
   Widget _buildCarruselContent(List<Constelacion> planetas) {
     return Column(
       children: [
-        // Indicador de página
         _buildPageIndicator(planetas.length),
-
-        // Carrusel de planetas
         Expanded(
           flex: 3,
           child: PageView.builder(
@@ -246,7 +243,6 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
           ),
         ),
 
-        // Información detallada del planeta actual
         Expanded(flex: 2, child: _buildDetallePlaneta(planetas[_currentPage])),
       ],
     );
@@ -300,7 +296,6 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Icono del planeta
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -314,8 +309,6 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
             ),
           ),
           const SizedBox(height: 15),
-
-          // Nombre del planeta
           Text(
             planeta.nombreSoloEspanol,
             style: const TextStyle(
@@ -327,8 +320,6 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
           ),
 
           const SizedBox(height: 5),
-
-          // Nombre en inglés
           Text(
             planeta.nombreSoloIngles,
             style: const TextStyle(
@@ -339,8 +330,6 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
           ),
 
           const SizedBox(height: 10),
-
-          // Estado de visibilidad
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -483,3 +472,4 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
     );
   }
 }
+
