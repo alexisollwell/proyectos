@@ -38,7 +38,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         _loading = false;
       });
 
-      // Si tenemos coordenadas, centrar el mapa
       if (_locationData?.tieneCoordenadasValidas ?? false) {
         _centerMapOnLocation();
       }
@@ -64,7 +63,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
-    // Esperar un poco para que el mapa se inicialice antes de centrar
     Future.delayed(const Duration(milliseconds: 500), () {
       _centerMapOnLocation();
     });
@@ -98,16 +96,9 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
             _buildHeader(),
-
-            // Mapa (siempre visible)
             Expanded(flex: 2, child: _buildMapSection()),
-
-            // Información de IP (siempre visible)
             _buildInfoSection(),
-
-            // Botones de acción
             _buildActionButtons(),
           ],
         ),
@@ -151,7 +142,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             ),
           ),
           Container(
-            width: 44, // Para mantener simetría
+            width: 44,
           ),
         ],
       ),
@@ -301,7 +292,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           ),
           child: const FaIcon(
             FontAwesomeIcons.solidCircle,
-            // FontAwesomeIcons.solidCircleNotch,
             color: Color.fromARGB(255, 212, 212, 240),
             size: 20,
           ),
@@ -485,7 +475,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: () {
-                // Navegar a constelaciones con estas coordenadas
                 if (_locationData?.tieneCoordenadasValidas ?? false) {
                   // Navigator.push(...);
                 }
