@@ -6,12 +6,10 @@ const String astronomyAppId = '4cd00d9c-cfe1-438b-a685-56b860b1fbed';
 const String astronomyAppSecret =
     '74a66015888f7dd4d8450fd837ca8affa8676296ca225de002112d2f74685097b2ec899c3fddabd77bde3db4aeac717174f0497d29d144da77782242d757541cb99878c8e3ac545f368321ea3068ead43c661cc315227171409c8116f98cc7cbb93cfeae91b73eff6f9e5718c554463e';
 
-// Astronomy API endpoints para planetas
 String planetasUrl() {
   return 'https://api.astronomyapi.com/api/v2/bodies/positions';
 }
 
-// Mapeo de IDs de planetas con nombres en español e inglés
 const Map<String, Map<String, String>> planetasInfo = {
   'sun': {'es': 'Sol', 'en': 'Sun', 'id': 'sun'},
   'moon': {'es': 'Luna', 'en': 'Moon', 'id': 'moon'},
@@ -25,7 +23,6 @@ const Map<String, Map<String, String>> planetasInfo = {
   '899': {'es': 'Neptuno', 'en': 'Neptune', 'id': '899'},
 };
 
-// Función para generar el auth string
 String getAstronomyAuthString() {
   final credentials = '$astronomyAppId:$astronomyAppSecret';
   final bytes = utf8.encode(credentials);
@@ -44,3 +41,4 @@ String getCurrentTime() {
 }
 
 String ipInfoUrl = "https://ipinfo.io/json";
+
