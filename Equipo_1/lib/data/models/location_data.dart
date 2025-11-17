@@ -1,4 +1,5 @@
-import 'package:proyectos/models/ipinfo_model.dart';
+import 'package:proyectos/data/models/ip_info.dart';
+
 
 class LocationData {
   final String ip;

@@ -1,66 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:proyectos/views/pages/login_page.dart';
-// import 'views/pages/users_page.dart';
-// import 'views/pages/spacex_page.dart';
-// import 'views/pages/ipinfo_page.dart';
+import 'package:proyectos/data/services/session_service.dart';
+import 'package:proyectos/presentation/pages/home_page.dart';
+import 'package:proyectos/presentation/pages/login_page.dart';
+import 'package:proyectos/presentation/pages/change_password_page.dart'; 
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final userId = await SessionService.getUserSession();
+
+  runApp(MyApp(userId: userId));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final int? userId;
+
+  const MyApp({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Proyecto APIs',
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: userId == null ? const LoginPage() : const HomePage(),
+      routes: {
+        "/cambiar_contra": (context) => const ChangePasswordPage(),
+      },
     );
   }
 }
 
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: const Text("Proyecto 3 APIs")),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             ElevatedButton(
-//               child: const Text("Usuarios - Reqres"),
-//               onPressed: () => Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (_) => const UsersPage()),
-//               ),
-//             ),
-//             ElevatedButton(
-//               child: const Text("Ver Constelación Visible"),
-//               onPressed: () => Navigator.push(
-//                 context,
-//                 MaterialPageRoute(
-//                   builder: (context) => PaginaConstelacion(
-//                     latitude: 32.5149, // Tu latitud
-//                     longitude: -117.0382, // Tu longitud
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             ElevatedButton(
-//               child: const Text("Mi ubicación - IPInfo"),
-//               onPressed: () => Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (_) => const IpInfoPage()),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

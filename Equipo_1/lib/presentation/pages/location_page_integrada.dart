@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:proyectos/models/location_data.dart';
-import 'package:proyectos/services/location_service.dart';
+import 'package:proyectos/data/models/location_data.dart';
+import 'package:proyectos/data/services/location_service.dart';
 
 class IntegratedLocationPage extends StatefulWidget {
-  const IntegratedLocationPage({super.key});
+  IntegratedLocationPage({super.key});
 
   @override
   State<IntegratedLocationPage> createState() => _IntegratedLocationPageState();

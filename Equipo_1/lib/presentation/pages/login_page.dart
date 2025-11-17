@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:proyectos/views/pages/home_page.dart';
+import 'package:proyectos/data/services/user_service.dart';
+import 'package:proyectos/presentation/pages/home_page.dart';
+import 'package:proyectos/presentation/pages/register_page.dart';
+import 'package:proyectos/data/services/session_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +14,48 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final emailCtrl = TextEditingController();
+  final passwordCtrl = TextEditingController();
+  final userService = UserService();
+
+  void _mostrarMensaje(String msg, {bool error = true}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: error ? Colors.red : Colors.green,
+      ),
+    );
+  }
+
+Future<void> _iniciarSesion() async {
+  final email = emailCtrl.text.trim();
+  final pass = passwordCtrl.text;
+
+  if (email.isEmpty || pass.isEmpty) {
+    _mostrarMensaje("Ingrese su correo y contraseña");
+    return;
+  }
+
+  final usuario = await userService.login(email, pass);
+
+  if (usuario == null) {
+    _mostrarMensaje("Correo o contraseña incorrectos");
+    return;
+  }
+
+  await SessionService.saveUserSession(usuario.id!);
+
+  _mostrarMensaje("Bienvenido ${usuario.nombre}", error: false);
+
+  Future.delayed(const Duration(milliseconds: 800), () {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const HomePage()),
+    );
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,11 +63,6 @@ class _LoginPageState extends State<LoginPage> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: <Color>[
-              // Color(0xffF9FBE7),
-              // Color(0xffF0EDD4),
-              // Color(0xffECCDB4),
-              // Color(0xffFEA1A1),
-              // Color(0xffD14D72),
               Color.fromARGB(255, 231, 243, 251),
               Color.fromARGB(255, 212, 220, 240),
               Color.fromARGB(255, 180, 200, 236),
@@ -38,12 +78,12 @@ class _LoginPageState extends State<LoginPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  FaIcon(
+                  const FaIcon(
                     FontAwesomeIcons.globe,
                     color: Color.fromARGB(255, 59, 55, 137),
                     size: 100,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
                   Text(
                     "DESCOVERY WORLD",
@@ -53,14 +93,15 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
+
                   const Text(
                     "Bienvenido",
                     style: TextStyle(
                       fontSize: 18,
                       color: Color.fromARGB(255, 64, 55, 137),
-                      //fontWeight: FontWeight.bold
                     ),
                   ),
+
                   const SizedBox(height: 30),
 
                   Padding(
@@ -69,14 +110,15 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 161, 161, 254),
                         border: Border.all(
-                          color: const Color.fromARGB(255, 215, 212, 240),
+                          color: Color.fromARGB(255, 215, 212, 240),
                         ),
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 20.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
                         child: TextField(
-                          decoration: InputDecoration(
+                          controller: emailCtrl,
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "Correo",
                           ),
@@ -84,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 10),
 
                   Padding(
@@ -92,15 +135,16 @@ class _LoginPageState extends State<LoginPage> {
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 163, 161, 254),
                         border: Border.all(
-                          color: const Color.fromARGB(255, 212, 212, 240),
+                          color: Color.fromARGB(255, 212, 212, 240),
                         ),
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      child: const Padding(
-                        padding: EdgeInsets.only(left: 20.0),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
                         child: TextField(
+                          controller: passwordCtrl,
                           obscureText: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: "Contraseña",
                           ),
@@ -108,19 +152,17 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 25),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => const HomePage()),
-                      ),
+                      onTap: _iniciarSesion,
                       child: Container(
-                        padding: EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 55, 66, 137),
+                          color: const Color.fromARGB(255, 55, 66, 137),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Center(
@@ -137,23 +179,40 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
 
+                  const SizedBox(height: 15),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
+                      children: [
+                        const Text(
                           "¿Aun no tienes cuenta? ",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          "Registrese aqui",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const RegisterPage(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Regístrese aquí",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
                         ),
-                        SizedBox(height: 25),
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 25),
                 ],
               ),
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:proyectos/services/constelacion_ar.dart';
-import 'package:proyectos/views/pages/location_page_integrada.dart';
-import 'package:proyectos/views/pages/spacex_page.dart';
+import 'package:proyectos/data/services/session_service.dart';
+import 'package:proyectos/presentation/pages/constelacion_page.dart';
+import 'package:proyectos/presentation/pages/location_page_integrada.dart';
+import 'package:proyectos/presentation/pages/spacex_page.dart';
+import 'package:proyectos/presentation/pages/login_page.dart';
+import 'package:proyectos/presentation/pages/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,68 +23,9 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 161, 167, 254),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: Color.fromARGB(255, 55, 66, 137),
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    "DESCOVERY WORLD",
-                    style: GoogleFonts.bebasNeue(
-                      fontSize: 24,
-                      color: const Color.fromARGB(255, 69, 55, 137),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 161, 167, 254),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: Color.fromARGB(255, 55, 66, 137),
-                        size: 20,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildTopBar(context),
             const SizedBox(height: 30),
+
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -101,7 +45,9 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
+
                     const SizedBox(height: 20),
+
                     _buildOpcionMenu(
                       icono: FontAwesomeIcons.star,
                       titulo: "Ver Constelación Visible",
@@ -117,7 +63,9 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
+
                     const SizedBox(height: 20),
+
                     _buildOpcionMenu(
                       icono: FontAwesomeIcons.mapLocationDot,
                       titulo: "Geolocalización & Mapa",
@@ -128,7 +76,7 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                const IntegratedLocationPage(),
+                                IntegratedLocationPage(),
                           ),
                         );
                       },
@@ -137,9 +85,86 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
+
             const SizedBox(height: 30),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () async {
+              await SessionService.logout();
+
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 161, 167, 254),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.logout,
+                color: Color.fromARGB(255, 55, 66, 137),
+                size: 20,
+              ),
+            ),
+          ),
+
+          Text(
+            "DESCOVERY WORLD",
+            style: GoogleFonts.bebasNeue(
+              fontSize: 24,
+              color: const Color.fromARGB(255, 69, 55, 137),
+            ),
+          ),
+
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfilePage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 161, 167, 254),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.person_rounded,
+                color: Color.fromARGB(255, 55, 66, 137),
+                size: 22,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
