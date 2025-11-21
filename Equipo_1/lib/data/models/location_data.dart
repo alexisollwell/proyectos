@@ -1,6 +1,5 @@
 import 'package:proyectos/data/models/ip_info.dart';
 
-
 class LocationData {
   final String ip;
   final String ciudad;
@@ -10,6 +9,8 @@ class LocationData {
   final double? latitud;
   final double? longitud;
   final DateTime? timestamp;
+  final bool esGPS;
+  final LocationData? datosIP;
 
   LocationData({
     required this.ip,
@@ -20,6 +21,8 @@ class LocationData {
     this.latitud,
     this.longitud,
     this.timestamp,
+    this.esGPS = false,
+    this.datosIP,
   });
 
   factory LocationData.fromIpInfo(IpInfo ipInfo) {
@@ -34,7 +37,7 @@ class LocationData {
           lng = double.tryParse(coordenadas[1]);
         }
       } catch (e) {
-        print('Error al procesar coordenadas: $e');
+        print('Error al procesar coordenadas IPInfo: $e');
       }
     }
 
@@ -47,16 +50,24 @@ class LocationData {
       latitud: lat,
       longitud: lng,
       timestamp: DateTime.now(),
+      esGPS: false,
     );
   }
 
   bool get tieneCoordenadasValidas => latitud != null && longitud != null;
 
-  String get coordenadasFormateadas =>
-      tieneCoordenadasValidas ? '$latitud, $longitud' : 'No disponible';
+  String get coordenadasFormateadas => tieneCoordenadasValidas
+      ? '${latitud!.toStringAsFixed(6)}, ${longitud!.toStringAsFixed(6)}'
+      : 'No disponible';
+
+  String get tipoUbicacion => esGPS ? 'GPS Precisa' : 'Aproximada por IP';
+
+  String get ciudadIP => datosIP?.ciudad ?? 'No disponible';
+
+  String get paisIP => datosIP?.pais ?? 'No disponible';
 
   @override
   String toString() {
-    return 'IP: $ip\nCiudad: $ciudad\nRegión: $estado\nPaís: $pais\nCoordenadas: $coordenadasFormateadas';
+    return 'IP: $ip\nCiudad: $ciudad\nRegión: $estado\nPaís: $pais\nCoordenadas: $coordenadasFormateadas\nTipo: $tipoUbicacion';
   }
 }

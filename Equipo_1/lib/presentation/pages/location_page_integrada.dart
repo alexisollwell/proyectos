@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:proyectos/data/models/location_data.dart';
 import 'package:proyectos/data/services/location_service.dart';
+import 'package:proyectos/presentation/pages/spacex_page.dart';
 
 class IntegratedLocationPage extends StatefulWidget {
-  IntegratedLocationPage({super.key});
+  const IntegratedLocationPage({super.key});
 
   @override
   State<IntegratedLocationPage> createState() => _IntegratedLocationPageState();
 }
 
 class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
-  GoogleMapController? _mapController;
+  MapController? _mapController;
   LocationData? _locationData;
   bool _loading = true;
   bool _error = false;
+  String _errorMessage = '';
 
   @override
   void initState() {
     super.initState();
+    _mapController = MapController();
     _loadLocationData();
   }
 
@@ -29,6 +33,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       setState(() {
         _loading = true;
         _error = false;
+        _errorMessage = '';
       });
 
       final locationData = await LocationService.obtenerUbicacion();
@@ -36,57 +41,54 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       setState(() {
         _locationData = locationData;
         _loading = false;
+        // Si tenemos datos de GPS, no hay error incluso si IPInfo falló
+        _error = !(_locationData?.tieneCoordenadasValidas ?? false);
       });
 
-      if (_locationData?.tieneCoordenadasValidas ?? false) {
+      // Siempre centrar el mapa, incluso si son coordenadas por defecto
+      if (_locationData != null) {
         _centerMapOnLocation();
       }
     } catch (e) {
       setState(() {
         _loading = false;
         _error = true;
+        _errorMessage = e.toString();
       });
     }
   }
 
   void _centerMapOnLocation() {
-    if (_mapController != null && _locationData!.tieneCoordenadasValidas ??
-        false) {
-      _mapController?.animateCamera(
-        CameraUpdate.newLatLngZoom(
-          LatLng(_locationData!.latitud!, _locationData!.longitud!),
-          12,
-        ),
-      );
+    if (_mapController != null && _locationData != null) {
+      final lat = _locationData!.latitud ?? 19.4326;
+      final lng = _locationData!.longitud ?? -99.1332;
+
+      _mapController!.move(LatLng(lat, lng), 12.0);
     }
   }
 
-  void _onMapCreated(GoogleMapController controller) {
-    _mapController = controller;
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _centerMapOnLocation();
-    });
-  }
+  List<Marker> _getMarkers() {
+    if (_locationData != null) {
+      final lat = _locationData!.latitud ?? 19.4326;
+      final lng = _locationData!.longitud ?? -99.1332;
 
-  Set<Marker> _getMarkers() {
-    if (_locationData?.tieneCoordenadasValidas ?? false) {
-      return {
+      return [
         Marker(
-          markerId: const MarkerId('current_location'),
-          position: LatLng(_locationData!.latitud!, _locationData!.longitud!),
-          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-          infoWindow: InfoWindow(
-            title: _locationData!.ciudad.isNotEmpty
-                ? _locationData!.ciudad
-                : 'Tu Ubicación',
-            snippet: _locationData!.pais.isNotEmpty
-                ? '${_locationData!.estado}, ${_locationData!.pais}'
-                : 'Basado en tu IP',
+          point: LatLng(lat, lng),
+          width: 50,
+          height: 50,
+          child: Icon(
+            Icons.location_pin,
+            color: _locationData!.esGPS
+                ? Colors
+                      .green // Verde para GPS
+                : const Color.fromARGB(255, 55, 66, 137), // Azul para IP
+            size: 40,
           ),
         ),
-      };
+      ];
     }
-    return {};
+    return [];
   }
 
   @override
@@ -141,9 +143,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
               color: const Color.fromARGB(255, 69, 55, 137),
             ),
           ),
-          Container(
-            width: 44,
-          ),
+          Container(width: 44),
         ],
       ),
     );
@@ -165,30 +165,33 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
-          child: _loading
-              ? _buildMapLoading()
-              : _locationData?.tieneCoordenadasValidas ?? false
-              ? _buildInteractiveMap()
-              : _buildMapError(),
+          child: _loading ? _buildMapLoading() : _buildInteractiveMap(),
         ),
       ),
     );
   }
 
   Widget _buildInteractiveMap() {
+    // Coordenadas para el mapa (usar las disponibles o por defecto)
+    final lat = _locationData?.latitud ?? 19.4326;
+    final lng = _locationData?.longitud ?? -99.1332;
+
     return Stack(
       children: [
-        GoogleMap(
-          onMapCreated: _onMapCreated,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(_locationData!.latitud!, _locationData!.longitud!),
-            zoom: 10,
+        FlutterMap(
+          mapController: _mapController,
+          options: MapOptions(
+            center: LatLng(lat, lng),
+            zoom: 12.0, // Un poco más de zoom para mejor visualización
+            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
           ),
-          markers: _getMarkers(),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          mapType: MapType.normal,
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.example.proyectos',
+            ),
+            MarkerLayer(markers: _getMarkers()),
+          ],
         ),
         Positioned(
           top: 10,
@@ -200,6 +203,33 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             child: const Icon(Icons.my_location, size: 18),
           ),
         ),
+        // Solo mostrar advertencia si NO es GPS y hay algún problema
+        if (!_locationData!.esGPS && _error)
+          Positioned(
+            top: 10,
+            left: 10,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.orange.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Row(
+                children: [
+                  Icon(Icons.warning, size: 16, color: Colors.white),
+                  SizedBox(width: 6),
+                  Text(
+                    'Ubicación aproximada',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -216,41 +246,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             Text(
               'Cargando mapa...',
               style: TextStyle(color: Color.fromARGB(255, 55, 66, 137)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMapError() {
-    return Container(
-      color: const Color.fromARGB(255, 212, 220, 240),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const FaIcon(
-              FontAwesomeIcons.mapLocationDot,
-              color: Color.fromARGB(255, 55, 66, 137),
-              size: 48,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'No se pudieron cargar las coordenadas',
-              style: TextStyle(
-                color: Color.fromARGB(255, 55, 66, 137),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            ElevatedButton(
-              onPressed: _loadLocationData,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 55, 66, 137),
-                foregroundColor: Colors.white,
-              ),
-              child: const Text('Reintentar'),
             ),
           ],
         ),
@@ -275,9 +270,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       ),
       child: _loading
           ? _buildInfoLoading()
-          : _error
-          ? _buildInfoError()
-          : _buildInfoContent(),
+          : _buildInfoContent(), // Siempre mostrar contenido si no está loading
     );
   }
 
@@ -321,98 +314,143 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
     );
   }
 
-  Widget _buildInfoError() {
+  Widget _buildInfoContent() {
+    return Column(
+      children: [
+        // Información de IP
+        _buildIPInfo(),
+        const SizedBox(height: 16),
+
+        // Información de ubicación
+        _buildLocationInfo(),
+        const SizedBox(height: 12),
+
+        _buildInfoGrid(),
+      ],
+    );
+  }
+
+  Widget _buildIPInfo() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 212, 212, 240),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 77, 84, 209),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const FaIcon(
+              FontAwesomeIcons.networkWired,
+              color: Colors.white,
+              size: 16,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Información de Red',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 55, 66, 137),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'IP: ${_locationData!.ip}',
+                  style: const TextStyle(
+                    color: Color.fromARGB(255, 77, 84, 209),
+                    fontSize: 12,
+                  ),
+                ),
+                if (_locationData!.datosIP != null &&
+                    !_locationData!.esGPS) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    'Ubicación por IP: ${_locationData!.datosIP!.ciudad}, ${_locationData!.datosIP!.pais}',
+                    style: const TextStyle(
+                      color: Color.fromARGB(255, 100, 100, 150),
+                      fontSize: 11,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLocationInfo() {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 55, 66, 137),
+            color: _locationData!.esGPS
+                ? Colors
+                      .green // Verde para GPS
+                : const Color.fromARGB(255, 55, 66, 137), // Azul para IP
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const FaIcon(
-            FontAwesomeIcons.triangleExclamation,
-            color: Color.fromARGB(255, 212, 212, 240),
+          child: FaIcon(
+            _locationData!.esGPS
+                ? FontAwesomeIcons.satellite
+                : FontAwesomeIcons.locationDot,
+            color: Colors.white,
             size: 20,
           ),
         ),
         const SizedBox(width: 15),
-        const Expanded(
+        Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Error al obtener datos',
-                style: TextStyle(
+                _locationData!.ciudad.isNotEmpty
+                    ? _locationData!.ciudad
+                    : 'Ubicación Detectada',
+                style: const TextStyle(
                   color: Color.fromARGB(255, 55, 66, 137),
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
-                'Verifica tu conexión a internet',
-                style: TextStyle(
+                _locationData!.pais.isNotEmpty
+                    ? '${_locationData!.estado}, ${_locationData!.pais}'
+                    : 'Basado en tu dirección IP',
+                style: const TextStyle(
                   color: Color.fromARGB(255, 77, 84, 209),
                   fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                _locationData!.esGPS
+                    ? '📍 Ubicación precisa por GPS'
+                    : '📍 Ubicación aproximada por IP',
+                style: TextStyle(
+                  color: _locationData!.esGPS ? Colors.green : Colors.orange,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildInfoContent() {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 55, 66, 137),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const FaIcon(
-                FontAwesomeIcons.locationDot,
-                color: Color.fromARGB(255, 212, 212, 240),
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _locationData!.ciudad.isNotEmpty
-                        ? _locationData!.ciudad
-                        : 'Ubicación Detectada',
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 55, 66, 137),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _locationData!.pais.isNotEmpty
-                        ? '${_locationData!.estado}, ${_locationData!.pais}'
-                        : 'Basado en tu dirección IP',
-                    style: const TextStyle(
-                      color: Color.fromARGB(255, 77, 84, 209),
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildInfoGrid(),
       ],
     );
   }
@@ -430,11 +468,17 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         _buildInfoItem('Coordenadas', _locationData!.coordenadasFormateadas),
         _buildInfoItem('Región', _locationData!.estado),
         _buildInfoItem('País', _locationData!.pais),
+        _buildInfoItem('Tipo', _locationData!.esGPS ? 'GPS' : 'IP'),
+        _buildInfoItem(
+          'Precisión',
+          _locationData!.esGPS ? 'Alta' : 'Media',
+          valueColor: _locationData!.esGPS ? Colors.green : Colors.orange,
+        ),
       ],
     );
   }
 
-  Widget _buildInfoItem(String title, String value) {
+  Widget _buildInfoItem(String title, String value, {Color? valueColor}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
@@ -455,9 +499,12 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           ),
           Text(
             value,
-            style: const TextStyle(
-              color: Color.fromARGB(255, 77, 84, 209),
+            style: TextStyle(
+              color: valueColor ?? const Color.fromARGB(255, 77, 84, 209),
               fontSize: 11,
+              fontWeight: valueColor != null
+                  ? FontWeight.bold
+                  : FontWeight.normal,
             ),
             overflow: TextOverflow.ellipsis,
           ),
@@ -475,9 +522,12 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           Expanded(
             child: ElevatedButton.icon(
               onPressed: () {
-                if (_locationData?.tieneCoordenadasValidas ?? false) {
-                  // Navigator.push(...);
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PaginaConstelacion(),
+                  ),
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 161, 167, 254),

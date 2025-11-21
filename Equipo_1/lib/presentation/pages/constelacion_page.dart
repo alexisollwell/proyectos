@@ -4,8 +4,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math';
 import '../../data/models/constelacion.dart';
-import '../../data/models/estrella.dart';
-import '../../data/models/coordenadas_celestiales.dart';
 import '../../data/models/constelaciones_mock.dart';
 import '../widgets/constelacion_painter.dart';
 
@@ -20,7 +18,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
   CameraController? _controller;
   List<CameraDescription>? _cameras;
   bool _isCameraInitialized = false;
-  double _azimuth = 0.0; 
+  double _azimuth = 0.0;
   double _pitch = 0.0;
   double _roll = 0.0;
   Position? _currentPosition;
@@ -32,7 +30,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
   void initState() {
     super.initState();
     _initializeCamera();
-    _startSensors(); 
+    _startSensors();
     _getCurrentLocation();
   }
 
@@ -111,6 +109,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     }
     return constelacionesFiltradas;
   }
+
   bool _esConstelacionVisible(Constelacion constelacion) {
     final fovHorizontal = _fovHorizontal * 1.5;
     final fovVertical = (pi / 4) * 1.5;
@@ -147,7 +146,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
       body: Stack(
         children: [
           if (_isCameraInitialized) CameraPreview(_controller!),
-          _buildConstellationsOverlay(), 
+          _buildConstellationsOverlay(),
           _buildControls(),
           _buildConstellationSelector(),
           _buildDebugInfo(),
@@ -170,7 +169,7 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
           constelaciones: constelacionesVisibles,
           azimuth: _azimuth,
           pitch: _pitch,
-          scale: scale, 
+          scale: scale,
         ),
       ),
     );
@@ -276,7 +275,6 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             Text(
               'Az: ${(_azimuth * 180 / pi).toStringAsFixed(1)}°',
               style: const TextStyle(color: Colors.white, fontSize: 12),
@@ -299,4 +297,3 @@ class _ConstelacionARPageState extends State<ConstelacionARPage> {
     );
   }
 }
-

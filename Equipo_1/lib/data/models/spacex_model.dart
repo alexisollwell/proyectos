@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Constelacion {
   final String nombre;
   final String visibilidad;

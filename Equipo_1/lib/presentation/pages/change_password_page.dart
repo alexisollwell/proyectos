@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:proyectos/data/services/user_service.dart';
 import 'package:proyectos/data/services/session_service.dart';
-import 'package:proyectos/data/models/user_model.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -16,7 +17,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   final _confirmarController = TextEditingController();
 
   final _service = UserService();
-
   bool _cargando = false;
 
   Future<void> _guardar() async {
@@ -44,12 +44,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     final userId = await SessionService.getUserId();
     if (userId == null) {
       _mensaje("Error al obtener usuario");
+      setState(() => _cargando = false);
       return;
     }
 
     final usuario = await _service.obtenerUsuarioPorID(userId);
     if (usuario == null) {
       _mensaje("Usuario no encontrado");
+      setState(() => _cargando = false);
       return;
     }
 
@@ -66,52 +68,221 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     setState(() => _cargando = false);
 
     Navigator.pop(context);
-    _mensaje("Contraseña actualizada correctamente");
+    _mensaje("Contraseña actualizada correctamente", esError: false);
   }
 
-  void _mensaje(String msg) {
+  void _mensaje(String msg, {bool esError = true}) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
+      SnackBar(
+        content: Text(msg),
+        backgroundColor: esError ? Colors.red : Colors.green,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cambiar contraseña"),
-        backgroundColor: const Color.fromARGB(255, 55, 66, 137),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
+      backgroundColor: const Color.fromARGB(255, 231, 243, 251),
+      body: SafeArea(
         child: Column(
           children: [
-            TextField(
-              controller: _actualController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Contraseña actual"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _nuevaController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Nueva contraseña"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _confirmarController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Confirmar contraseña"),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _cargando ? null : _guardar,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 55, 66, 137),
+            _buildTopBar(),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+
+                    const FaIcon(
+                      FontAwesomeIcons.lock,
+                      color: Color.fromARGB(255, 59, 55, 137),
+                      size: 80,
+                    ),
+                    const SizedBox(height: 20),
+
+                    Text(
+                      "CAMBIAR CONTRASEÑA",
+                      style: GoogleFonts.bebasNeue(
+                        fontSize: 32,
+                        color: const Color.fromARGB(255, 69, 55, 137),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+
+                    const Text(
+                      "Actualiza tu contraseña de acceso",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Color.fromARGB(255, 64, 55, 137),
+                      ),
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    _buildTextField(
+                      controller: _actualController,
+                      hintText: "Contraseña actual",
+                      obscureText: true,
+                      icon: FontAwesomeIcons.lock,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    _buildTextField(
+                      controller: _nuevaController,
+                      hintText: "Nueva contraseña",
+                      obscureText: true,
+                      icon: FontAwesomeIcons.key,
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    _buildTextField(
+                      controller: _confirmarController,
+                      hintText: "Confirmar contraseña",
+                      obscureText: true,
+                      icon: FontAwesomeIcons.checkDouble,
+                    ),
+
+                    const SizedBox(height: 40),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: GestureDetector(
+                        onTap: _cargando ? null : _guardar,
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 55, 66, 137),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.2),
+                                blurRadius: 6,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: _cargando
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 212, 212, 240),
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : const Text(
+                                    "GUARDAR CAMBIOS",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 212, 212, 240),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-              child: _cargando
-                  ? const CircularProgressIndicator(color: Colors.white)
-                  : const Text("Guardar"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 161, 167, 254),
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Color.fromARGB(255, 55, 66, 137),
+                size: 20,
+              ),
+            ),
+          ),
+
+          Text(
+            "CONTRASEÑA",
+            style: GoogleFonts.bebasNeue(
+              fontSize: 20,
+              color: const Color.fromARGB(255, 69, 55, 137),
+            ),
+          ),
+
+          Container(width: 44),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hintText,
+    required bool obscureText,
+    required IconData icon,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 161, 167, 254),
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        child: Row(
+          children: [
+            FaIcon(
+              icon,
+              color: const Color.fromARGB(255, 55, 66, 137),
+              size: 18,
+            ),
+            const SizedBox(width: 15),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                obscureText: obscureText,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hintText,
+                  hintStyle: const TextStyle(
+                    color: Color.fromARGB(255, 100, 100, 150),
+                  ),
+                ),
+                style: const TextStyle(color: Color.fromARGB(255, 55, 66, 137)),
+              ),
             ),
           ],
         ),

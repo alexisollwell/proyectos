@@ -336,8 +336,12 @@ class ConstellationService {
 
   static List<Constelacion> _crearCuerposCelestesLocales() {
     final locationData = LocationService.currentLocationData;
-    String ubicacionInfo = '';
-    if (locationData != null && locationData.ciudad.isNotEmpty) {
+    String ubicacionInfo = ' desde tu ubicación';
+
+    if (locationData != null &&
+        locationData.ciudad.isNotEmpty &&
+        !locationData.ciudad.contains('ubicación') &&
+        locationData.ciudad != 'GPS') {
       ubicacionInfo = ' desde ${locationData.ciudad}';
     }
 
@@ -480,4 +484,3 @@ Future<Constelacion> getConstelacion(double lat, double lng) async {
   final planetas = await ConstellationService.obtenerTodosLosPlanetas();
   return planetas.first;
 }
-
