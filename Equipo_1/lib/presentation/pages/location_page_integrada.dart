@@ -6,6 +6,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:proyectos/data/models/location_data.dart';
 import 'package:proyectos/data/services/location_service.dart';
 import 'package:proyectos/presentation/pages/spacex_page.dart';
+import 'package:flutter_compass/flutter_compass.dart';
+import 'dart:math';
 
 class IntegratedLocationPage extends StatefulWidget {
   const IntegratedLocationPage({super.key});
@@ -19,6 +21,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
   LocationData? _locationData;
   bool _loading = true;
   bool _error = false;
+  double _heading = 0.0;
   String _errorMessage = '';
 
   @override
@@ -26,6 +29,11 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
     super.initState();
     _mapController = MapController();
     _loadLocationData();
+    FlutterCompass.events!.listen((event) {
+      setState(() {
+        _heading = event.heading ?? 0;
+      });
+    });
   }
 
   Future<void> _loadLocationData() async {
@@ -192,6 +200,25 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             ),
             MarkerLayer(markers: _getMarkers()),
           ],
+        ),
+        Positioned(
+          top: 20,
+          right: 20,
+          child: Transform.rotate(
+            angle: (_heading * (pi / 180)) * -1,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black54,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: Image.asset(
+                'assets/compass_arrow.png',
+                width: 60,
+                height: 60,
+              ),
+            ),
+          ),
         ),
         Positioned(
           top: 10,
