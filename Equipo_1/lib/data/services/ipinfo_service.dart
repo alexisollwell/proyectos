@@ -10,6 +10,7 @@ class IpInfoService {
 
   Future<IpInfo> getIpInfo() async {
     try {
+      // ignore: avoid_print
       print('Obteniendo información de IP...');
 
       final response = await http.get(
@@ -21,7 +22,9 @@ class IpInfoService {
         final jsonResponse = json.decode(response.body);
         _ipInfoCache = IpInfo.fromJson(jsonResponse);
 
+        // ignore: avoid_print
         print('IPInfo obtenido: ${_ipInfoCache!.ip}');
+        // ignore: avoid_print
         print('Ubicación: ${_ipInfoCache!.ciudad}, ${_ipInfoCache!.pais}');
 
         return _ipInfoCache!;
@@ -29,6 +32,7 @@ class IpInfoService {
         throw Exception('Error HTTP al obtener IPInfo: ${response.statusCode}');
       }
     } catch (e) {
+      // ignore: avoid_print
       print('Error obteniendo IPInfo: $e');
       rethrow;
     }

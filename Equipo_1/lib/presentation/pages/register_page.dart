@@ -60,6 +60,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   if (img != null) {
                     setState(() => imagenPerfil = File(img.path));
                   }
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
               ),
@@ -80,6 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   if (img != null) {
                     setState(() => imagenPerfil = File(img.path));
                   }
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
                 },
               ),
@@ -138,6 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
         context,
         MaterialPageRoute(builder: (_) => const LoginPage()),
       );
@@ -302,6 +305,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             borderRadius: BorderRadius.circular(15),
                             boxShadow: [
                               BoxShadow(
+                                // ignore: deprecated_member_use
                                 color: Colors.black.withOpacity(0.1),
                                 blurRadius: 4,
                                 offset: const Offset(0, 2),
@@ -355,6 +359,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
+                              // ignore: deprecated_member_use
                               color: Colors.black.withOpacity(0.1),
                               blurRadius: 4,
                               offset: const Offset(0, 2),
@@ -364,6 +369,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 15.0),
                           child: DropdownButtonFormField(
+                            // ignore: deprecated_member_use
                             value: genero,
                             decoration: const InputDecoration(
                               border: InputBorder.none,
@@ -423,6 +429,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
+                                  // ignore: deprecated_member_use
                                   color: Colors.black.withOpacity(0.2),
                                   blurRadius: 6,
                                   offset: const Offset(0, 3),
@@ -489,6 +496,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -530,6 +538,7 @@ class _RegisterPageState extends State<RegisterPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),

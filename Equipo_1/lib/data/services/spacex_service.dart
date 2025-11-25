@@ -8,9 +8,11 @@ import 'package:proyectos/data/models/spacex_model.dart';
 class ConstellationService {
   static Future<List<Constelacion>> obtenerTodosLosPlanetas() async {
     try {
+      // ignore: avoid_print
       print('📍 Iniciando búsqueda de todos los cuerpos celestes...');
 
       if (!LocationService.tieneDatosValidos) {
+        // ignore: avoid_print
         print('🔄 Usando ubicación por defecto...');
         LocationService.latitud;
         LocationService.longitud;
@@ -19,16 +21,19 @@ class ConstellationService {
       final lat = LocationService.latitud!;
       final lng = LocationService.longitud!;
 
+      // ignore: avoid_print
       print('🎯 Ubicación para búsqueda: $lat, $lng');
 
       try {
         final authString = getAstronomyAuthString();
         return await _obtenerTodosLosCuerposCelestes(authString, lat, lng);
       } catch (e) {
+        // ignore: avoid_print
         print('❌ Error con API, usando datos locales: $e');
         return _crearCuerposCelestesLocales();
       }
     } catch (e) {
+      // ignore: avoid_print
       print('❌ Error general: $e');
       return _crearCuerposCelestesLocales();
     }
@@ -62,8 +67,10 @@ class ConstellationService {
           cuerpoId,
         );
         todosLosCuerpos.add(cuerpo);
+        // ignore: avoid_print
         print('✅ Cuerpo celeste obtenido: ${cuerpo.nombre}');
       } catch (e) {
+        // ignore: avoid_print
         print('❌ Error obteniendo cuerpo $cuerpoId: $e');
         final cuerpoLocal = _crearCuerpoCelesteLocal(cuerpoId);
         if (cuerpoLocal != null) {
@@ -142,6 +149,7 @@ class ConstellationService {
         }
       }
     } catch (e) {
+      // ignore: avoid_print
       print('⚠️ No se pudo extraer nombre inglés: $e');
     }
 
@@ -374,7 +382,7 @@ class ConstellationService {
       ),
       Constelacion(
         nombre: 'Mercurio (Mercury)',
-        visibilidad: 'Visible al amanecer/atardecer$ubicacionInfo',
+        visibilidad: 'Visible al atardecer$ubicacionInfo',
         mejorhorario: 'Al amanecer o atardecer',
         descripcion:
             'Mercurio (Mercury) es el planeta más cercano al Sol y el más pequeño del Sistema Solar. Completa una órbita alrededor del Sol cada 88 días terrestres. Datos de respaldo locales.',

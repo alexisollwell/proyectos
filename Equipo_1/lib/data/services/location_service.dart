@@ -19,13 +19,12 @@ class LocationService {
 
   static Future<LocationData> obtenerUbicacion() async {
     try {
+      // ignore: avoid_print
       print('📍 Iniciando obtención de ubicación combinada...');
 
-      // Obtener datos de IPInfo y GPS simultáneamente
       final ipInfoData = await _obtenerDatosIPInfo();
       final gpsData = await _obtenerUbicacionGPS();
 
-      // Combinar datos: IP de IPInfo, ubicación de GPS (si está disponible)
       _currentLocationData = LocationData(
         ip: ipInfoData.ip,
         ciudad: gpsData?.ciudad ?? ipInfoData.ciudad,
@@ -35,23 +34,28 @@ class LocationService {
         latitud: gpsData?.latitud ?? ipInfoData.latitud,
         longitud: gpsData?.longitud ?? ipInfoData.longitud,
         timestamp: DateTime.now(),
-        esGPS: gpsData != null, // True si tenemos datos de GPS
-        datosIP: ipInfoData, // Mantenemos los datos de IPInfo
+        esGPS: gpsData != null,
+        datosIP: ipInfoData,
       );
 
+      // ignore: avoid_print
       print('✅ Datos combinados obtenidos:');
+      // ignore: avoid_print
       print('   IP: ${_currentLocationData!.ip}');
+      // ignore: avoid_print
       print('   Ciudad: ${_currentLocationData!.ciudad}');
+      // ignore: avoid_print
       print(
         '   Coordenadas: ${_currentLocationData!.latitud}, ${_currentLocationData!.longitud}',
       );
+      // ignore: avoid_print
       print('   Tipo: ${_currentLocationData!.esGPS ? "GPS" : "IP"}');
 
       return _currentLocationData!;
     } catch (e) {
+      // ignore: avoid_print
       print('❌ Error obteniendo ubicación combinada: $e');
 
-      // Fallback con datos básicos
       _currentLocationData = LocationData(
         ip: 'No disponible',
         ciudad: 'Ubicación no disponible',
@@ -71,12 +75,14 @@ class LocationService {
 
   static Future<LocationData> _obtenerDatosIPInfo() async {
     try {
+      // ignore: avoid_print
       print('📍 Obteniendo datos de IPInfo...');
       final ipInfoService = IpInfoService();
       final ipInfo = await ipInfoService.getIpInfo();
 
       return LocationData.fromIpInfo(ipInfo);
     } catch (e) {
+      // ignore: avoid_print
       print('❌ Error en IPInfo: $e');
       return LocationData(
         ip: 'No disponible',
@@ -94,9 +100,9 @@ class LocationService {
 
   static Future<LocationData?> _obtenerUbicacionGPS() async {
     try {
-      // Verificar permisos
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
+        // ignore: avoid_print
         print('❌ Servicios de ubicación desactivados');
         return null;
       }
@@ -105,27 +111,32 @@ class LocationService {
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
+          // ignore: avoid_print
           print('❌ Permisos de ubicación denegados');
           return null;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
+        // ignore: avoid_print
         print('❌ Permisos de ubicación denegados permanentemente');
         return null;
       }
 
-      // Obtener ubicación actual
+      // ignore: avoid_print
       print('📍 Obteniendo posición GPS...');
       Position position = await Geolocator.getCurrentPosition(
+        // ignore: deprecated_member_use
         desiredAccuracy: LocationAccuracy.best,
+        // ignore: deprecated_member_use
         timeLimit: const Duration(seconds: 10),
       );
 
+      // ignore: avoid_print
       print('✅ GPS obtenido: ${position.latitude}, ${position.longitude}');
 
       return LocationData(
-        ip: 'GPS', // Esto será sobrescrito por IPInfo
+        ip: 'GPS',
         ciudad: 'Tu ubicación actual',
         estado: 'GPS',
         pais: 'GPS',
@@ -136,6 +147,7 @@ class LocationService {
         esGPS: true,
       );
     } catch (e) {
+      // ignore: avoid_print
       print('❌ Error en GPS: $e');
       return null;
     }

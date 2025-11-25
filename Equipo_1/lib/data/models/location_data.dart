@@ -37,6 +37,7 @@ class LocationData {
           lng = double.tryParse(coordenadas[1]);
         }
       } catch (e) {
+        // ignore: avoid_print
         print('Error al procesar coordenadas IPInfo: $e');
       }
     }

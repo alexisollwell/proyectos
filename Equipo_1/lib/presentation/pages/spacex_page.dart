@@ -102,6 +102,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -263,6 +264,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
               shape: BoxShape.circle,
               color: _currentPage == index
                   ? const Color.fromARGB(255, 55, 66, 137)
+                  // ignore: deprecated_member_use
                   : Colors.grey.withOpacity(0.5),
             ),
           );
@@ -282,6 +284,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(isCurrent ? 0.3 : 0.1),
             blurRadius: isCurrent ? 10 : 5,
             offset: Offset(0, isCurrent ? 5 : 2),
@@ -300,6 +303,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
+              // ignore: deprecated_member_use
               color: ConstelacionUI.colorTipo(planeta).withOpacity(0.2),
               shape: BoxShape.circle,
             ),
@@ -365,6 +369,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.1),
               blurRadius: 6,
               offset: const Offset(0, 3),
@@ -473,4 +478,3 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
     );
   }
 }
-

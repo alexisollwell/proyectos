@@ -49,6 +49,7 @@ dependencies:
   image_picker: ^1.2.1
   shared_preferences: ^2.5.3
   flutter_compass: ^0.8.0
+  crypto: ^3.0.7
 
 dev_dependencies:
   flutter_test:
@@ -71,9 +72,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-
 assets:
-    - assets/compass_arrow.png
+  - assets/images/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

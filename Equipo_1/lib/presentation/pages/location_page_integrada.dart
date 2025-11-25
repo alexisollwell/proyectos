@@ -7,7 +7,6 @@ import 'package:proyectos/data/models/location_data.dart';
 import 'package:proyectos/data/services/location_service.dart';
 import 'package:proyectos/presentation/pages/spacex_page.dart';
 import 'package:flutter_compass/flutter_compass.dart';
-import 'dart:math';
 
 class IntegratedLocationPage extends StatefulWidget {
   const IntegratedLocationPage({super.key});
@@ -21,7 +20,9 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
   LocationData? _locationData;
   bool _loading = true;
   bool _error = false;
+  // ignore: unused_field
   double _heading = 0.0;
+  // ignore: unused_field
   String _errorMessage = '';
 
   @override
@@ -49,11 +50,9 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
       setState(() {
         _locationData = locationData;
         _loading = false;
-        // Si tenemos datos de GPS, no hay error incluso si IPInfo falló
         _error = !(_locationData?.tieneCoordenadasValidas ?? false);
       });
 
-      // Siempre centrar el mapa, incluso si son coordenadas por defecto
       if (_locationData != null) {
         _centerMapOnLocation();
       }
@@ -88,9 +87,8 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           child: Icon(
             Icons.location_pin,
             color: _locationData!.esGPS
-                ? Colors
-                      .green // Verde para GPS
-                : const Color.fromARGB(255, 55, 66, 137), // Azul para IP
+                ? Colors.green
+                : const Color.fromARGB(255, 55, 66, 137),
             size: 40,
           ),
         ),
@@ -131,6 +129,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -165,6 +164,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
+              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.2),
               blurRadius: 8,
               offset: const Offset(0, 4),
@@ -180,7 +180,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
   }
 
   Widget _buildInteractiveMap() {
-    // Coordenadas para el mapa (usar las disponibles o por defecto)
     final lat = _locationData?.latitud ?? 19.4326;
     final lng = _locationData?.longitud ?? -99.1332;
 
@@ -189,8 +188,11 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         FlutterMap(
           mapController: _mapController,
           options: MapOptions(
+            // ignore: deprecated_member_use
             center: LatLng(lat, lng),
-            zoom: 12.0, // Un poco más de zoom para mejor visualización
+            // ignore: deprecated_member_use
+            zoom: 12.0,
+            // ignore: deprecated_member_use
             interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
           ),
           children: [
@@ -202,25 +204,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           ],
         ),
         Positioned(
-          top: 20,
-          right: 20,
-          child: Transform.rotate(
-            angle: (_heading * (pi / 180)) * -1,
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.black54,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Image.asset(
-                'assets/compass_arrow.png',
-                width: 60,
-                height: 60,
-              ),
-            ),
-          ),
-        ),
-        Positioned(
           top: 10,
           right: 10,
           child: FloatingActionButton.small(
@@ -230,7 +213,6 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             child: const Icon(Icons.my_location, size: 18),
           ),
         ),
-        // Solo mostrar advertencia si NO es GPS y hay algún problema
         if (!_locationData!.esGPS && _error)
           Positioned(
             top: 10,
@@ -238,6 +220,7 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
+                // ignore: deprecated_member_use
                 color: Colors.orange.withOpacity(0.9),
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -289,15 +272,14 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
         ],
       ),
-      child: _loading
-          ? _buildInfoLoading()
-          : _buildInfoContent(), // Siempre mostrar contenido si no está loading
+      child: _loading ? _buildInfoLoading() : _buildInfoContent(),
     );
   }
 
@@ -344,14 +326,10 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
   Widget _buildInfoContent() {
     return Column(
       children: [
-        // Información de IP
         _buildIPInfo(),
         const SizedBox(height: 16),
-
-        // Información de ubicación
         _buildLocationInfo(),
         const SizedBox(height: 12),
-
         _buildInfoGrid(),
       ],
     );
@@ -426,9 +404,8 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: _locationData!.esGPS
-                ? Colors
-                      .green // Verde para GPS
-                : const Color.fromARGB(255, 55, 66, 137), // Azul para IP
+                ? Colors.green
+                : const Color.fromARGB(255, 55, 66, 137),
             borderRadius: BorderRadius.circular(12),
           ),
           child: FaIcon(

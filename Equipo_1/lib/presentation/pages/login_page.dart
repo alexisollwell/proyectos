@@ -27,34 +27,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-Future<void> _iniciarSesion() async {
-  final email = emailCtrl.text.trim();
-  final pass = passwordCtrl.text;
+  Future<void> _iniciarSesion() async {
+    final email = emailCtrl.text.trim();
+    final pass = passwordCtrl.text;
 
-  if (email.isEmpty || pass.isEmpty) {
-    _mostrarMensaje("Ingrese su correo y contraseña");
-    return;
+    if (email.isEmpty || pass.isEmpty) {
+      _mostrarMensaje("Ingrese su correo y contraseña");
+      return;
+    }
+
+    final usuario = await userService.login(email, pass);
+
+    if (usuario == null) {
+      _mostrarMensaje("Correo o contraseña incorrectos");
+      return;
+    }
+
+    await SessionService.saveUserSession(usuario.id!);
+
+    _mostrarMensaje("Bienvenido ${usuario.nombre}", error: false);
+
+    Future.delayed(const Duration(milliseconds: 800), () {
+      Navigator.pushReplacement(
+        // ignore: use_build_context_synchronously
+        context,
+        MaterialPageRoute(builder: (_) => const HomePage()),
+      );
+    });
   }
-
-  final usuario = await userService.login(email, pass);
-
-  if (usuario == null) {
-    _mostrarMensaje("Correo o contraseña incorrectos");
-    return;
-  }
-
-  await SessionService.saveUserSession(usuario.id!);
-
-  _mostrarMensaje("Bienvenido ${usuario.nombre}", error: false);
-
-  Future.delayed(const Duration(milliseconds: 800), () {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-    );
-  });
-}
-
 
   @override
   Widget build(BuildContext context) {

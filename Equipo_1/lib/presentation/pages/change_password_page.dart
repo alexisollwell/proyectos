@@ -67,6 +67,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
     setState(() => _cargando = false);
 
+    // ignore: use_build_context_synchronously
     Navigator.pop(context);
     _mensaje("Contraseña actualizada correctamente", esError: false);
   }
@@ -159,6 +160,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
+                                // ignore: deprecated_member_use
                                 color: Colors.black.withOpacity(0.2),
                                 blurRadius: 6,
                                 offset: const Offset(0, 3),
@@ -214,6 +216,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -254,6 +257,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: Colors.black.withOpacity(0.1),
             blurRadius: 4,
             offset: const Offset(0, 2),

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../../data/models/constelacion.dart';
 import '../../data/models/estrella.dart';
@@ -7,28 +9,44 @@ class ConstelacionPainter extends CustomPainter {
   final double azimuth;
   final double pitch;
   final double scale;
-  final double starCoordinateScale = 0.05;
+  final double fovHorizontal;
+  final double fovVertical;
+  final Function(String)? onConstelacionTap;
 
   ConstelacionPainter({
     required this.constelaciones,
     required this.azimuth,
     required this.pitch,
     required this.scale,
+    required this.fovHorizontal,
+    required this.fovVertical,
+    this.onConstelacionTap,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.save();
-    canvas.translate(size.width / 2, size.height / 2);
-    canvas.rotate(-azimuth * 3.1416 / 180);
-    canvas.translate(-size.width / 2, -size.height / 2);
     final center = Offset(size.width / 2, size.height / 2);
 
     for (final constelacion in constelaciones) {
-      _paintConstellation(canvas, size, center, constelacion);
+      if (_estaEnCampoVision(constelacion)) {
+        _paintConstellation(canvas, size, center, constelacion);
+      }
+    }
+  }
+
+  bool _estaEnCampoVision(Constelacion constelacion) {
+    final coord = constelacion.coordinates;
+    final altitud = coord.currentAltitude;
+    final azimuthConst = coord.currentAzimuth;
+
+    double diffAzimuth = (azimuth - azimuthConst).abs();
+    if (diffAzimuth > pi) {
+      diffAzimuth = (2 * pi) - diffAzimuth;
     }
 
-    canvas.restore();
+    final diffAltitud = (pitch - altitud).abs();
+
+    return diffAzimuth < (fovHorizontal / 2) && diffAltitud < (fovVertical / 2);
   }
 
   void _paintConstellation(
@@ -37,31 +55,31 @@ class ConstelacionPainter extends CustomPainter {
     Offset center,
     Constelacion constelacion,
   ) {
+    final isFixed = constelacion.isFixed;
+
+    // ignore: deprecated_member_use
+    final lineColor = isFixed ? Colors.green : Colors.yellow.withOpacity(0.8);
+    final starColor = isFixed ? Colors.green : Colors.white;
+
     final paint = Paint()
-      ..color = Colors.yellow.withOpacity(0.8)
+      ..color = lineColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
+      ..strokeWidth = isFixed ? 2.5 : 2.0;
 
     final starPaint = Paint()
-      ..color = Colors.white
+      ..color = starColor
       ..style = PaintingStyle.fill;
 
     final Map<int, Offset> starPositions = {};
-
-    bool hasStarsOnScreen = false;
+    final posicionConstelacion = _calculateConstellationPosition(
+      center,
+      constelacion,
+    );
 
     for (int i = 0; i < constelacion.estrellas.length; i++) {
       final star = constelacion.estrellas[i];
-      final pos = _calculateStarPosition(center, constelacion, star);
-
-      if (pos.dx > 0 &&
-          pos.dx < size.width &&
-          pos.dy > 0 &&
-          pos.dy < size.height) {
-        starPositions[i] = pos;
-        canvas.drawCircle(pos, 3.0 * star.brightness, starPaint);
-        hasStarsOnScreen = true;
-      }
+      final pos = _calculateStarPosition(posicionConstelacion, star);
+      starPositions[i] = pos;
     }
 
     for (int i = 0; i < constelacion.estrellas.length; i++) {
@@ -77,38 +95,138 @@ class ConstelacionPainter extends CustomPainter {
       }
     }
 
-    if (hasStarsOnScreen && starPositions.containsKey(0)) {
+    for (int i = 0; i < constelacion.estrellas.length; i++) {
+      if (!starPositions.containsKey(i)) continue;
+
+      final star = constelacion.estrellas[i];
+      final pos = starPositions[i]!;
+
+      final radius = (isFixed ? 3.5 : 3.0) * star.brightness;
+      canvas.drawCircle(pos, radius, starPaint);
+
+      if (isFixed) {
+        final ringPaint = Paint()
+          ..color = Colors.green
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5;
+        canvas.drawCircle(pos, radius + 1.0, ringPaint);
+      }
+    }
+
+    if (starPositions.containsKey(0)) {
       _drawText(
         canvas,
         constelacion.nombre,
         starPositions[0]!.translate(10, -20),
+        isFixed: isFixed,
       );
+    }
+
+    if (isFixed && !_estaCompletamenteEnPantalla(starPositions, size)) {
+      _drawOffScreenIndicator(canvas, size, center, constelacion);
     }
   }
 
-  Offset _calculateStarPosition(Offset center, Constelacion c, Estrella e) {
-    final starAz = c.coordinates.azimuth + (e.x * starCoordinateScale);
-    final starAlt = c.coordinates.altitude + (e.y * starCoordinateScale);
+  Offset _calculateConstellationPosition(
+    Offset center,
+    Constelacion constelacion,
+  ) {
+    final coord = constelacion.coordinates;
+    final altitud = coord.currentAltitude;
+    final azimuthConst = coord.currentAzimuth;
 
-    double dAz = starAz - azimuth;
-    double dAlt = starAlt - pitch;
-
-    if (dAz > 3.14) dAz -= 6.28;
-    if (dAz < -3.14) dAz += 6.28;
+    final dAz = azimuthConst - azimuth;
+    final dAlt = altitud - pitch;
 
     return Offset(center.dx + (dAz * scale), center.dy - (dAlt * scale));
   }
 
-  void _drawText(Canvas canvas, String text, Offset pos) {
+  Offset _calculateStarPosition(Offset constellationCenter, Estrella star) {
+    return Offset(
+      constellationCenter.dx + (star.x * 40),
+      constellationCenter.dy + (star.y * 40),
+    );
+  }
+
+  bool _estaCompletamenteEnPantalla(Map<int, Offset> positions, Size size) {
+    for (final position in positions.values) {
+      if (position.dx < 0 ||
+          position.dx > size.width ||
+          position.dy < 0 ||
+          position.dy > size.height) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  void _drawOffScreenIndicator(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    Constelacion constelacion,
+  ) {
+    final coord = constelacion.coordinates;
+    final altitud = coord.currentAltitude;
+    final azimuthConst = coord.currentAzimuth;
+    final dAz = azimuthConst - azimuth;
+    final dAlt = altitud - pitch;
+    final magnitude = sqrt(dAz * dAz + dAlt * dAlt);
+    final dirX = dAz / magnitude;
+    final dirY = -dAlt / magnitude;
+    final screenEdge = _calculateScreenEdgePosition(size, center, dirX, dirY);
+
+    final indicatorPaint = Paint()
+      ..color = Colors.green
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(screenEdge, 6, indicatorPaint);
+
+    final linePaint = Paint()
+      // ignore: deprecated_member_use
+      ..color = Colors.green.withOpacity(0.5)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    canvas.drawLine(center, screenEdge, linePaint);
+  }
+
+  Offset _calculateScreenEdgePosition(
+    Size size,
+    Offset center,
+    double dirX,
+    double dirY,
+  ) {
+    final halfWidth = size.width / 2;
+    final halfHeight = size.height / 2;
+    final distToRight = (halfWidth - center.dx) / dirX;
+    final distToLeft = (-halfWidth - center.dx) / dirX;
+    final distToBottom = (halfHeight - center.dy) / dirY;
+    final distToTop = (-halfHeight - center.dy) / dirY;
+    double minDist = double.infinity;
+    if (distToRight > 0 && distToRight < minDist) minDist = distToRight;
+    if (distToLeft > 0 && distToLeft < minDist) minDist = distToLeft;
+    if (distToBottom > 0 && distToBottom < minDist) minDist = distToBottom;
+    if (distToTop > 0 && distToTop < minDist) minDist = distToTop;
+
+    return Offset(center.dx + dirX * minDist, center.dy + dirY * minDist);
+  }
+
+  void _drawText(
+    Canvas canvas,
+    String text,
+    Offset pos, {
+    bool isFixed = false,
+  }) {
     final painter = TextPainter(
       text: TextSpan(
         text: text,
-        style: const TextStyle(
-          color: Colors.white,
+        style: TextStyle(
+          color: isFixed ? Colors.green : Colors.white,
           fontWeight: FontWeight.bold,
           fontSize: 14,
-          shadows: [
-            Shadow(color: Colors.black, blurRadius: 2, offset: Offset(1, 1)),
+          shadows: const [
+            Shadow(color: Colors.black, blurRadius: 3, offset: Offset(1, 1)),
           ],
         ),
       ),
