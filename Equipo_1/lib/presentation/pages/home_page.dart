@@ -7,6 +7,7 @@ import 'package:proyectos/presentation/pages/location_page_integrada.dart';
 import 'package:proyectos/presentation/pages/spacex_page.dart';
 import 'package:proyectos/presentation/pages/login_page.dart';
 import 'package:proyectos/presentation/pages/profile_page.dart';
+import 'package:proyectos/presentation/pages/compass_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -76,6 +77,24 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => IntegratedLocationPage(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    _buildOpcionMenu(
+                      icono: FontAwesomeIcons.compass,
+                      titulo: "Brújula",
+                      descripcion:
+                          "Orientación con el sensor de tu dispositivo",
+                      colorFondo: const Color.fromARGB(255, 180, 200, 236),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const CompassPage(),
                           ),
                         );
                       },
