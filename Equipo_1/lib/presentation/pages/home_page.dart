@@ -8,6 +8,8 @@ import 'package:proyectos/presentation/pages/spacex_page.dart';
 import 'package:proyectos/presentation/pages/login_page.dart';
 import 'package:proyectos/presentation/pages/profile_page.dart';
 import 'package:proyectos/presentation/pages/compass_page.dart';
+import 'package:proyectos/presentation/pages/galeria_constelaciones.dart';
+import 'package:proyectos/presentation/pages/detalle_constelacion.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -99,6 +101,25 @@ class _HomePageState extends State<HomePage> {
                         );
                       },
                     ),
+
+                    const SizedBox(height: 20),
+
+                    _buildOpcionMenu(
+                      icono: FontAwesomeIcons.image,
+                      titulo: "Ver Galeria de Constelaciones",
+                      descripcion:
+                          "Ver la información de cada constelación",
+                      colorFondo: const Color.fromARGB(255, 161, 167, 254),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const GaleriaConstelacionesPage(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -122,7 +143,6 @@ class _HomePageState extends State<HomePage> {
               await SessionService.logout();
 
               Navigator.pushReplacement(
-                // ignore: use_build_context_synchronously
                 context,
                 MaterialPageRoute(builder: (_) => const LoginPage()),
               );
@@ -134,7 +154,6 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -171,7 +190,6 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -207,7 +225,6 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.1),
               blurRadius: 6,
               offset: const Offset(0, 3),
