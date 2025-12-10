@@ -41,15 +41,27 @@ final List<Constelacion> constelaciones = [
     datoCurioso:
         "Sus tres estrellas centrales forman el famoso 'Cinturón de Orión'.",
     puntos: [
-      Offset(0.25, 0.20), // Betelgeuse
-      Offset(0.75, 0.15), // Bellatrix
-      Offset(0.55, 0.48), // Cinturón 1
-      Offset(0.50, 0.50), // Cinturón 2
-      Offset(0.45, 0.52), // Cinturón 3
-      Offset(0.30, 0.80), // Saiph
-      Offset(0.45, 0.52), // Regreso al cinturón
-      Offset(0.55, 0.48),
-      Offset(0.70, 0.75), // Rigel
+      Offset(0.31, 0.205),
+      Offset(0.348, 0.261),
+      Offset(0.440, 0.503),
+      Offset(0.348, 0.261),
+      Offset(0.479, 0.189),
+      Offset(0.539, 0.284),
+      Offset(0.495, 0.46),
+      Offset(0.47, 0.48),
+      Offset(0.440, 0.503),
+      Offset(0.395, 0.705),
+      Offset(0.615, 0.665),
+      Offset(0.495, 0.46),
+      Offset(0.539, 0.284),
+      Offset(0.776, 0.269),
+      Offset(0.77, 0.22),
+      Offset(0.74, 0.185),
+      Offset(0.77, 0.22),
+      Offset(0.776, 0.269),
+      Offset(0.763, 0.303),
+      Offset(0.747, 0.383),
+      Offset(0.712, 0.4),
     ],
   ),
 
@@ -191,12 +203,28 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Norte",
     datoCurioso: "Contiene la galaxia más cercana a la Vía Láctea.",
     puntos: [
-      Offset(0.10, 0.20), // Estrella cabeza (Alpheratz)
-      Offset(0.30, 0.35),
-      Offset(0.50, 0.50), // Mirach
-      Offset(0.70, 0.65), // Almach
-      Offset(0.50, 0.50), // Vuelta a Mirach
-      Offset(0.45, 0.30), // Hacia la galaxia
+      Offset(0.241, 0.241),
+      Offset(0.355, 0.249),
+      Offset(0.457, 0.357),
+      Offset(0.46, 0.435), // Mirach
+      Offset(0.408, 0.51),
+      Offset(0.259, 0.418),
+      Offset(0.158, 0.4),
+      Offset(0.259, 0.418),
+      Offset(0.408, 0.51),
+      Offset(0.59, 0.585),
+      Offset(0.594, 0.703),
+      Offset(0.55, 0.752),
+      Offset(0.594, 0.703),
+      Offset(0.59, 0.585),
+      Offset(0.757, 0.608),
+      Offset(0.59, 0.585),
+      Offset(0.594, 0.518),
+      Offset(0.65, 0.4),
+      Offset(0.757, 0.284),
+      Offset(0.70, 0.27),
+      Offset(0.757, 0.284),
+      Offset(0.795, 0.229),
     ],
   ),
 
@@ -214,14 +242,35 @@ final List<Constelacion> constelaciones = [
     datoCurioso:
         "La estrella Algol es conocida como 'la estrella del demonio'.",
     puntos: [
-      Offset(0.50, 0.10), // Cabeza
-      Offset(0.45, 0.30), // Mirfak
-      Offset(0.20, 0.40), // Brazo
-      Offset(0.45, 0.30),
-      Offset(0.55, 0.55), // Cuerpo
-      Offset(0.50, 0.80), // Pierna 1
-      Offset(0.55, 0.55),
-      Offset(0.75, 0.60), // Pierna 2
+      Offset(0.658, 0.117),
+      Offset(0.49, 0.293),
+      Offset(0.40, 0.35),
+      Offset(0.275, 0.358),
+      Offset(0.253, 0.327),
+      Offset(0.238, 0.277),
+      Offset(0.296, 0.283),
+      Offset(0.352, 0.273),
+      Offset(0.296, 0.283),
+      Offset(0.238, 0.277),
+      Offset(0.253, 0.327),
+      Offset(0.275, 0.358),
+      Offset(0.40, 0.35),
+      Offset(0.49, 0.293),
+      Offset(0.565, 0.305),
+      Offset(0.68, 0.305),
+      Offset(0.565, 0.305),
+      Offset(0.49, 0.293),
+      Offset(0.554, 0.432),
+      Offset(0.553, 0.540),
+      Offset(0.58, 0.61),
+      Offset(0.553, 0.540),
+      Offset(0.554, 0.432),
+      Offset(0.49, 0.293),
+      Offset(0.379, 0.49),
+      Offset(0.302, 0.577),
+      Offset(0.278, 0.679),
+      Offset(0.31, 0.782),
+      Offset(0.372, 0.795),
     ],
   ),
 
@@ -238,11 +287,21 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Norte",
     datoCurioso: "Las Pléyades han sido estudiadas desde la antigüedad.",
     puntos: [
-      Offset(0.10, 0.20), // Cuerno 1
-      Offset(0.40, 0.50), // Centro cabeza
-      Offset(0.80, 0.70), // Aldebaran/Hocico
-      Offset(0.40, 0.50),
-      Offset(0.20, 0.65), // Cuerno 2
+      Offset(0.25, 0.178),
+      Offset(0.412, 0.358),
+      Offset(0.485, 0.463),
+      Offset(0.485, 0.514),
+      Offset(0.53, 0.51),
+      Offset(0.544, 0.57),
+      Offset(0.639, 0.647),
+      Offset(0.875, 0.735),
+      Offset(0.89, 0.773),
+      Offset(0.875, 0.735),
+      Offset(0.639, 0.647),
+      Offset(0.544, 0.57),
+      Offset(0.488, 0.568),
+      Offset(0.437, 0.557),
+      Offset(0.147, 0.373),
     ],
   ),
 
@@ -307,12 +366,17 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Sur",
     datoCurioso: "Una de las constelaciones más débiles del zodiaco.",
     puntos: [
-      Offset(0.10, 0.30), // Cuerno
-      Offset(0.30, 0.50),
-      Offset(0.50, 0.70), // Cuerpo bajo
-      Offset(0.80, 0.40), // Cola
-      Offset(0.60, 0.30), // Espalda
-      Offset(0.10, 0.30), // Cierre triangulo
+      Offset(0.18, 0.658), // Cuerno
+      Offset(0.29, 0.68),
+      Offset(0.415, 0.72),
+      Offset(0.557, 0.708),
+      Offset(0.675, 0.708),
+      Offset(0.695, 0.660),
+      Offset(0.759, 0.247),
+      Offset(0.455, 0.515),
+      Offset(0.345, 0.565),
+      Offset(0.24, 0.615),
+      Offset(0.18, 0.658),
     ],
   ),
 
