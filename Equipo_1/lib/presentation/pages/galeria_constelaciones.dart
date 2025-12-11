@@ -51,10 +51,7 @@ class GaleriaConstelacionesPage extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Image.asset(
-                      item.imagen,
-                      fit: BoxFit.cover,
-                    ),
+                    Image.asset(item.imagen, fit: BoxFit.cover),
                     Container(
                       alignment: Alignment.bottomLeft,
                       padding: const EdgeInsets.all(8),
@@ -62,6 +59,7 @@ class GaleriaConstelacionesPage extends StatelessWidget {
                         gradient: LinearGradient(
                           colors: [
                             Colors.transparent,
+                            // ignore: deprecated_member_use
                             Colors.black.withOpacity(0.40),
                           ],
                           begin: Alignment.topCenter,

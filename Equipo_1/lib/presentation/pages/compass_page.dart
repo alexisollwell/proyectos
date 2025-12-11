@@ -131,11 +131,13 @@ class _CompassPageState extends State<CompassPage> {
             shape: BoxShape.circle,
             color: _secondaryColor,
             border: Border.all(
+              // ignore: deprecated_member_use
               color: _isLocked ? _lockedColor : _primaryColor.withOpacity(0.3),
               width: _isLocked ? 3 : 2,
             ),
             boxShadow: [
               BoxShadow(
+                // ignore: deprecated_member_use
                 color: (_isLocked ? _lockedColor : _primaryColor).withOpacity(
                   0.15,
                 ),
@@ -220,6 +222,7 @@ class _CompassPageState extends State<CompassPage> {
         borderRadius: BorderRadius.circular(15),
         boxShadow: [
           BoxShadow(
+            // ignore: deprecated_member_use
             color: _primaryColor.withOpacity(0.1),
             blurRadius: 8,
             offset: const Offset(0, 3),
@@ -258,6 +261,7 @@ class _CompassPageState extends State<CompassPage> {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
+                  // ignore: deprecated_member_use
                   color: _lockedColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: _lockedColor, width: 1),
@@ -494,6 +498,7 @@ class DegreeMarksPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
+      // ignore: deprecated_member_use
       ..color = color.withOpacity(0.3)
       ..strokeWidth = 1;
 

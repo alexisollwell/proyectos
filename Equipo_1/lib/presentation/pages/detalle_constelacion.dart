@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:proyectos/data/models/constelacion_model.dart';
 import 'package:proyectos/presentation/pages/constelacion_page.dart';
-// IMPORTANTE: Importa el widget nuevo de animación de líneas
 import 'package:proyectos/presentation/widgets/constelation_line_animator.dart';
 
 class DetalleConstelacionPage extends StatefulWidget {
@@ -16,18 +15,13 @@ class DetalleConstelacionPage extends StatefulWidget {
 
 class _DetalleConstelacionPageState extends State<DetalleConstelacionPage>
     with TickerProviderStateMixin {
-  // Usamos TickerProviderStateMixin para múltiples animaciones
-
-  // Controlador para el texto informativo (slide up)
   late final AnimationController _cardCtrl = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 500),
   );
-
-  // Controlador para hacer aparecer la imagen REAL (fade in)
   late final AnimationController _imageFadeCtrl = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1500), // Fade lento de 1.5s
+    duration: const Duration(milliseconds: 1500),
   );
 
   late final Animation<Offset> _slideAnim = Tween<Offset>(
@@ -40,18 +34,15 @@ class _DetalleConstelacionPageState extends State<DetalleConstelacionPage>
     curve: Curves.easeIn,
   );
 
-  // Variable para controlar si ya terminaron las líneas
+  // ignore: unused_field
   bool _drawingFinished = false;
 
   @override
   void initState() {
     super.initState();
-    // Retrasamos la aparición de la tarjeta de texto para dar foco a la animación inicial
     Future.delayed(const Duration(milliseconds: 1000), () {
       if (mounted) _cardCtrl.forward();
     });
-
-    // Seguridad: Si la constelación no tuviera puntos, mostramos la imagen de inmediato
     if (widget.constelacion.puntos.isEmpty) {
       _drawingFinished = true;
       _imageFadeCtrl.value = 1.0;
@@ -137,36 +128,29 @@ class _DetalleConstelacionPageState extends State<DetalleConstelacionPage>
     final c = widget.constelacion;
 
     return Scaffold(
-      // Cambiamos el fondo del scaffold a negro para mejor inmersión
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(c.nombre),
-        // AppBar oscura para coincidir
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 116),
         children: [
-          // --- ZONA DE ANIMACIÓN E IMAGEN ---
           Hero(
             tag: 'constelacion-${c.nombre}',
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12),
               child: AspectRatio(
-                aspectRatio: 1, // Mantiene la forma cuadrada
+                aspectRatio: 1,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // CAPA 1: Fondo negro sólido
                     Container(color: Colors.black),
 
-                    // CAPA 2: Animador de líneas (Blueprint)
-                    // Se muestra siempre, pero quedará cubierto por la imagen al final
                     ConstelacionLineAnimator(
                       puntos: c.puntos,
                       onAnimationEnd: () {
-                        // Cuando termina de dibujar, iniciamos el Fade In de la imagen
                         if (mounted) {
                           setState(() {
                             _drawingFinished = true;
@@ -176,8 +160,6 @@ class _DetalleConstelacionPageState extends State<DetalleConstelacionPage>
                       },
                     ),
 
-                    // CAPA 3: Imagen Real (.jpg)
-                    // Inicialmente invisible (opacity 0), aparece suavemente
                     FadeTransition(
                       opacity: _imageFadeCtrl,
                       child: Image.asset(c.imagen, fit: BoxFit.cover),

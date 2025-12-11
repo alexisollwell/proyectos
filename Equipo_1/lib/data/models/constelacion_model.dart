@@ -11,7 +11,6 @@ class Constelacion {
   final String formaAprox;
   final String hemisferio;
   final String datoCurioso;
-  // NUEVO: Puntos para la animación (x, y de 0.0 a 1.0)
   final List<Offset> puntos;
 
   Constelacion({
@@ -25,6 +24,6 @@ class Constelacion {
     required this.formaAprox,
     required this.hemisferio,
     required this.datoCurioso,
-    this.puntos = const [], // Lista vacía por defecto
+    this.puntos = const [],
   });
 }

@@ -16,14 +16,14 @@ final List<Constelacion> constelaciones = [
     datoCurioso:
         "Es una constelación circumpolar, visible todo el año en zonas del norte.",
     puntos: [
-      Offset(0.12, 0.31), // Punta mango
+      Offset(0.12, 0.31),
       Offset(0.32, 0.31),
       Offset(0.43, 0.39),
-      Offset(0.57, 0.47), // Unión cazo
-      Offset(0.59, 0.60), // Fondo cazo abajo
-      Offset(0.82, 0.66), // Frente abajo
-      Offset(0.89, 0.50), // Frente arriba (Dubhe)
-      Offset(0.57, 0.47), // Cierre cazo
+      Offset(0.57, 0.47),
+      Offset(0.59, 0.60),
+      Offset(0.82, 0.66),
+      Offset(0.89, 0.50),
+      Offset(0.57, 0.47),
     ],
   ),
 
@@ -81,7 +81,7 @@ final List<Constelacion> constelaciones = [
     puntos: [
       Offset(0.16, 0.25),
       Offset(0.31, 0.46),
-      Offset(0.51, 0.45), // Pico central W
+      Offset(0.51, 0.45),
       Offset(0.63, 0.66),
       Offset(0.83, 0.49),
     ],
@@ -100,15 +100,15 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Norte",
     datoCurioso: "Regulus es una de las estrellas más brillantes del cielo.",
     puntos: [
-      Offset(0.81, 0.14), // Cabeza arriba
+      Offset(0.81, 0.14),
       Offset(0.72, 0.105),
       Offset(0.608, 0.245),
       Offset(0.64, 0.355),
-      Offset(0.75, 0.40), // Regulus
-      Offset(0.81, 0.54), // Cuello
-      Offset(0.33, 0.63), // Cuerpo
-      Offset(0.145, 0.705), // Cola estaa
-      Offset(0.285, 0.48), // Cuerpo
+      Offset(0.75, 0.40),
+      Offset(0.81, 0.54),
+      Offset(0.33, 0.63),
+      Offset(0.145, 0.705),
+      Offset(0.285, 0.48),
       Offset(0.64, 0.355),
     ],
   ),
@@ -126,23 +126,23 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Sur",
     datoCurioso: "Antares es conocida como 'el corazón del escorpión'.",
     puntos: [
-      Offset(0.80, 0.105), // Arriba
-      Offset(0.825, 0.18), // Pinzas
-      Offset(0.82, 0.265), // Pinzas
-      Offset(0.815, 0.34), // Pinzas
-      Offset(0.82, 0.265), // Pinzas
-      Offset(0.825, 0.18), // Pinzas
+      Offset(0.80, 0.105),
+      Offset(0.825, 0.18),
+      Offset(0.82, 0.265),
+      Offset(0.815, 0.34),
+      Offset(0.82, 0.265),
+      Offset(0.825, 0.18),
       Offset(0.67, 0.23),
       Offset(0.615, 0.268),
       Offset(0.575, 0.30),
-      Offset(0.48, 0.44), // Antares
+      Offset(0.48, 0.44),
       Offset(0.458, 0.55),
       Offset(0.432, 0.655),
-      Offset(0.325, 0.667), // continuar
-      Offset(0.197, 0.665), // Curva cola
-      Offset(0.135, 0.589), // Aguijón
-      Offset(0.17, 0.545), // Aguijón
-      Offset(0.22, 0.495), // Aguijón
+      Offset(0.325, 0.667),
+      Offset(0.197, 0.665),
+      Offset(0.135, 0.589),
+      Offset(0.17, 0.545),
+      Offset(0.22, 0.495),
     ],
   ),
 
@@ -159,12 +159,12 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Norte",
     datoCurioso: "Vega es una de las estrellas más estudiadas del universo.",
     puntos: [
-      Offset(0.685, 0.235), // Vega
+      Offset(0.685, 0.235),
       Offset(0.56, 0.33),
       Offset(0.395, 0.40),
       Offset(0.31, 0.735),
       Offset(0.465, 0.685),
-      Offset(0.56, 0.33), // Cierre rombo
+      Offset(0.56, 0.33),
     ],
   ),
 
@@ -181,12 +181,12 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Sur",
     datoCurioso: "Se usa para encontrar el punto cardinal sur.",
     puntos: [
-      Offset(0.508, 0.262), // Arriba
-      Offset(0.36, 0.705), // Abajo
-      Offset(0.43, 0.50), // Centro (ficticio para conectar)
-      Offset(0.30, 0.485), // Izq
-      Offset(0.43, 0.50), // Centro (ficticio para conectar)
-      Offset(0.668, 0.50), // Der
+      Offset(0.508, 0.262),
+      Offset(0.36, 0.705),
+      Offset(0.43, 0.50),
+      Offset(0.30, 0.485),
+      Offset(0.43, 0.50),
+      Offset(0.668, 0.50),
     ],
   ),
 
@@ -319,15 +319,21 @@ final List<Constelacion> constelaciones = [
     datoCurioso:
         "Sus estrellas principales representan a dos hermanos gemelos.",
     puntos: [
-      Offset(0.20, 0.15), // Castor
-      Offset(0.25, 0.40),
-      Offset(0.30, 0.70), // Pie
-      Offset(0.25, 0.40),
-      Offset(0.65, 0.45), // Brazos unidos
-      Offset(0.70, 0.35),
-      Offset(0.75, 0.20), // Pollux
-      Offset(0.70, 0.35),
-      Offset(0.75, 0.75), // Pie Pollux
+      Offset(0.873, 0.423),
+      Offset(0.794, 0.421),
+      Offset(0.635, 0.36),
+      Offset(0.363, 0.211),
+      Offset(0.267, 0.19),
+      Offset(0.205, 0.185),
+      Offset(0.105, 0.343),
+      Offset(0.135, 0.44),
+      Offset(0.306, 0.51),
+      Offset(0.443, 0.55),
+      Offset(0.694, 0.658),
+      Offset(0.648, 0.798),
+      Offset(0.694, 0.658),
+      Offset(0.765, 0.531),
+      Offset(0.794, 0.421),
     ],
   ),
 
@@ -343,13 +349,21 @@ final List<Constelacion> constelaciones = [
     hemisferio: "Sur",
     datoCurioso: "Una de las constelaciones más antiguas documentadas.",
     puntos: [
-      Offset(0.20, 0.20),
-      Offset(0.35, 0.30), // Hombros
-      Offset(0.50, 0.20),
-      Offset(0.35, 0.30),
-      Offset(0.40, 0.50), // Cuerpo
-      Offset(0.30, 0.70), // Flujo de agua 1
-      Offset(0.50, 0.80), // Flujo de agua 2
+      Offset(0.641, 0.726),
+      Offset(.566, .672),
+      Offset(.527, .643),
+      Offset(.424, .654),
+      Offset(.396, .75),
+      Offset(.258, .552),
+      Offset(.268, .51),
+      Offset(.305, .496),
+      Offset(.307, .398),
+      Offset(.505, .273),
+      Offset(.68, .14),
+      Offset(.505, .273),
+      Offset(.307, .398),
+      Offset(.467, .486),
+      Offset(.594, .457),
     ],
   ),
 
