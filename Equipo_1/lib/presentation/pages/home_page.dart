@@ -18,113 +18,173 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  /// 🔹 VALIDACIÓN AL SALIR DE LA APP
+  Future<bool> _confirmarSalir() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Salir de la aplicación"),
+            content: const Text("¿Deseas salir de la aplicación?"),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text("Cancelar"),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text("Salir"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  /// 🔹 VALIDACIÓN AL CERRAR SESIÓN
+  Future<void> _confirmarLogout() async {
+    final confirmar = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text("Cerrar sesión"),
+        content: const Text("¿Deseas cerrar sesión?"),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text("Cancelar"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text("Cerrar"),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmar == true) {
+      await SessionService.logout();
+
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 231, 243, 251),
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildTopBar(context),
-            const SizedBox(height: 30),
+    return WillPopScope(
+      onWillPop: _confirmarSalir,
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 231, 243, 251),
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildTopBar(context),
+              const SizedBox(height: 30),
 
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    _buildOpcionMenu(
-                      icono: FontAwesomeIcons.camera,
-                      titulo: "Realidad Aumentada",
-                      descripcion: "Visualiza constelaciones con tu cámara",
-                      colorFondo: const Color.fromARGB(255, 161, 167, 254),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ConstelacionARPage(),
-                          ),
-                        );
-                      },
-                    ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      _buildOpcionMenu(
+                        icono: FontAwesomeIcons.camera,
+                        titulo: "Realidad Aumentada",
+                        descripcion: "Visualiza constelaciones con tu cámara",
+                        colorFondo: const Color.fromARGB(255, 161, 167, 254),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ConstelacionARPage(),
+                            ),
+                          );
+                        },
+                      ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    _buildOpcionMenu(
-                      icono: FontAwesomeIcons.star,
-                      titulo: "Ver Constelación Visible",
-                      descripcion:
-                          "Observa las constelaciones actuales según tu ubicación",
-                      colorFondo: const Color.fromARGB(255, 180, 200, 236),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PaginaConstelacion(),
-                          ),
-                        );
-                      },
-                    ),
+                      _buildOpcionMenu(
+                        icono: FontAwesomeIcons.star,
+                        titulo: "Ver Constelación Visible",
+                        descripcion:
+                            "Observa las constelaciones actuales según tu ubicación",
+                        colorFondo: const Color.fromARGB(255, 180, 200, 236),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const PaginaConstelacion(),
+                            ),
+                          );
+                        },
+                      ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    _buildOpcionMenu(
-                      icono: FontAwesomeIcons.mapLocationDot,
-                      titulo: "Geolocalización & Mapa",
-                      descripcion: "Tu ubicación IP y mapa integrados",
-                      colorFondo: const Color.fromARGB(255, 161, 167, 254),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => IntegratedLocationPage(),
-                          ),
-                        );
-                      },
-                    ),
+                      _buildOpcionMenu(
+                        icono: FontAwesomeIcons.mapLocationDot,
+                        titulo: "Geolocalización & Mapa",
+                        descripcion: "Tu ubicación IP y mapa integrados",
+                        colorFondo: const Color.fromARGB(255, 161, 167, 254),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  IntegratedLocationPage(),
+                            ),
+                          );
+                        },
+                      ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    _buildOpcionMenu(
-                      icono: FontAwesomeIcons.compass,
-                      titulo: "Brújula",
-                      descripcion:
-                          "Orientación con el sensor de tu dispositivo",
-                      colorFondo: const Color.fromARGB(255, 180, 200, 236),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const CompassPage(),
-                          ),
-                        );
-                      },
-                    ),
+                      _buildOpcionMenu(
+                        icono: FontAwesomeIcons.compass,
+                        titulo: "Brújula",
+                        descripcion:
+                            "Orientación con el sensor de tu dispositivo",
+                        colorFondo: const Color.fromARGB(255, 180, 200, 236),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CompassPage(),
+                            ),
+                          );
+                        },
+                      ),
 
-                    const SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
-                    _buildOpcionMenu(
-                      icono: FontAwesomeIcons.image,
-                      titulo: "Ver Galeria de Constelaciones",
-                      descripcion: "Ver la información de cada constelación",
-                      colorFondo: const Color.fromARGB(255, 161, 167, 254),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const GaleriaConstelacionesPage(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                      _buildOpcionMenu(
+                        icono: FontAwesomeIcons.image,
+                        titulo: "Ver Galería de Constelaciones",
+                        descripcion:
+                            "Ver la información de cada constelación",
+                        colorFondo: const Color.fromARGB(255, 161, 167, 254),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const GaleriaConstelacionesPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 30),
-          ],
+              const SizedBox(height: 30),
+            ],
+          ),
         ),
       ),
     );
@@ -137,15 +197,7 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
-            onTap: () async {
-              await SessionService.logout();
-
-              Navigator.pushReplacement(
-                // ignore: use_build_context_synchronously
-                context,
-                MaterialPageRoute(builder: (_) => const LoginPage()),
-              );
-            },
+            onTap: _confirmarLogout,
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -153,7 +205,6 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -190,7 +241,6 @@ class _HomePageState extends State<HomePage> {
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -226,7 +276,6 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              // ignore: deprecated_member_use
               color: Colors.black.withOpacity(0.1),
               blurRadius: 6,
               offset: const Offset(0, 3),

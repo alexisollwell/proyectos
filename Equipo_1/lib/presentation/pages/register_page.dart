@@ -25,6 +25,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final confirmarPasswordCtrl = TextEditingController();
   final fechaCtrl = TextEditingController();
 
+  DateTime get _maxFechaNacimiento {
+  final hoy = DateTime.now();
+  return DateTime(hoy.year - 5, hoy.month, hoy.day);
+  }
+  
+  DateTime? fechaNacimientoSeleccionada;
   String genero = "Hombre";
   File? imagenPerfil;
 
@@ -101,8 +107,26 @@ class _RegisterPageState extends State<RegisterPage> {
     return newImage.path;
   }
 
+  int _calcularEdad(DateTime nacimiento) {
+  final hoy = DateTime.now();
+  int edad = hoy.year - nacimiento.year;
+
+  if (hoy.month < nacimiento.month ||
+      (hoy.month == nacimiento.month && hoy.day < nacimiento.day)) {
+    edad--;
+  }
+
+  return edad;
+}
+
+
   Future<void> _registrarUsuario() async {
     if (!_formKey.currentState!.validate()) return;
+
+    if (fechaNacimientoSeleccionada == null) {
+      _mostrarMensaje("Selecciona tu fecha de nacimiento");
+      return;
+    }
 
     if (passwordCtrl.text != confirmarPasswordCtrl.text) {
       _mostrarMensaje("Las contraseñas no coinciden");
@@ -290,14 +314,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           FocusScope.of(context).unfocus();
                           DateTime? date = await showDatePicker(
                             context: context,
-                            initialDate: DateTime(2000),
+                            initialDate: _maxFechaNacimiento,
                             firstDate: DateTime(1900),
-                            lastDate: DateTime.now(),
-                          );
+                            lastDate: _maxFechaNacimiento,
+                            helpText: "Selecciona tu fecha de nacimiento",
+                            );
+
                           if (date != null) {
-                            fechaCtrl.text =
-                                "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-                          }
+                            final edad = _calcularEdad(date);
+                              
+                              fechaNacimientoSeleccionada = date;
+                              fechaCtrl.text = 
+                              "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+                              }
+
                         },
                         child: Container(
                           decoration: BoxDecoration(

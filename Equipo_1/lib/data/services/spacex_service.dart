@@ -359,7 +359,7 @@ class ConstellationService {
         visibilidad: 'Visible durante el día$ubicacionInfo',
         mejorhorario: '06:00 - 18:00 (Horario diurno)',
         descripcion:
-            'El Sol es la estrella en el centro de nuestro Sistema Solar. Es una esfera casi perfecta de plasma caliente. ¡No mires directamente al Sol! Datos de respaldo locales.',
+            'El Sol es la estrella en el centro de nuestro Sistema Solar. Es una esfera casi perfecta de plasma caliente. ¡No mires directamente al Sol!',
         magnitud: -26.74,
         familia: 'Estrella',
         imagenUrl:
@@ -372,7 +372,7 @@ class ConstellationService {
         visibilidad: 'Visible según fase lunar$ubicacionInfo',
         mejorhorario: 'Depende de la fase lunar',
         descripcion:
-            'La Luna es el único satélite natural de la Tierra. Su influencia gravitatoria produce las mareas. Las fases lunares afectan su visibilidad. Datos de respaldo locales.',
+            'La Luna es el único satélite natural de la Tierra. Su influencia gravitatoria produce las mareas. Las fases lunares afectan su visibilidad.',
         magnitud: -12.74,
         familia: 'Satélite Natural',
         imagenUrl:
@@ -385,7 +385,7 @@ class ConstellationService {
         visibilidad: 'Visible al atardecer$ubicacionInfo',
         mejorhorario: 'Al amanecer o atardecer',
         descripcion:
-            'Mercurio (Mercury) es el planeta más cercano al Sol y el más pequeño del Sistema Solar. Completa una órbita alrededor del Sol cada 88 días terrestres. Datos de respaldo locales.',
+            'Mercurio (Mercury) es el planeta más cercano al Sol y el más pequeño del Sistema Solar. Completa una órbita alrededor del Sol cada 88 días terrestres.',
         magnitud: 0.23,
         familia: 'Planeta',
         imagenUrl:
@@ -398,7 +398,7 @@ class ConstellationService {
         visibilidad: 'Visible$ubicacionInfo',
         mejorhorario: '18:00 - 22:00 (Lucero del Alba/Tarde)',
         descripcion:
-            'Venus (Venus) es el planeta más brillante en el cielo nocturno, conocido como el "Lucero del Alba" o "Estrella de la Tarde". Su brillo intenso lo hace fácilmente identificable. Datos de respaldo locales.',
+            'Venus (Venus) es el planeta más brillante en el cielo nocturno, conocido como el "Lucero del Alba" o "Estrella de la Tarde". Su brillo intenso lo hace fácilmente identificable.',
         magnitud: -4.14,
         familia: 'Planeta',
         imagenUrl:
@@ -411,7 +411,7 @@ class ConstellationService {
         visibilidad: 'Siempre visible$ubicacionInfo',
         mejorhorario: 'Todo el día',
         descripcion:
-            'La Tierra (Earth) es nuestro hogar, el tercer planeta del Sistema Solar y el único conocido que alberga vida. Tiene un satélite natural: la Luna. Datos de respaldo locales.',
+            'La Tierra (Earth) es nuestro hogar, el tercer planeta del Sistema Solar y el único conocido que alberga vida. Tiene un satélite natural: la Luna.',
         magnitud: 0.0,
         familia: 'Planeta',
         imagenUrl:
@@ -424,7 +424,7 @@ class ConstellationService {
         visibilidad: 'Visible$ubicacionInfo',
         mejorhorario: '20:00 - 02:00',
         descripcion:
-            'Marte (Mars), el "Planeta Rojo", es conocido por su color característico. Es el cuarto planeta del Sistema Solar y tiene dos pequeñas lunas: Fobos y Deimos. Datos de respaldo locales.',
+            'Marte (Mars), el "Planeta Rojo", es conocido por su color característico. Es el cuarto planeta del Sistema Solar y tiene dos pequeñas lunas: Fobos y Deimos.',
         magnitud: 0.71,
         familia: 'Planeta',
         imagenUrl:
@@ -437,7 +437,7 @@ class ConstellationService {
         visibilidad: 'Visible$ubicacionInfo',
         mejorhorario: '19:00 - 01:00',
         descripcion:
-            'Júpiter (Jupiter) es el planeta más grande del Sistema Solar, un gigante gaseoso con una famosa Gran Mancha Roja. Tiene al menos 79 lunas conocidas. Datos de respaldo locales.',
+            'Júpiter (Jupiter) es el planeta más grande del Sistema Solar, un gigante gaseoso con una famosa Gran Mancha Roja. Tiene al menos 79 lunas conocidas.',
         magnitud: -2.20,
         familia: 'Planeta',
         imagenUrl:
@@ -450,7 +450,7 @@ class ConstellationService {
         visibilidad: 'Visible$ubicacionInfo',
         mejorhorario: '20:00 - 02:00',
         descripcion:
-            'Saturno (Saturn) es famoso por sus espectaculares anillos de hielo y roca. Es el segundo planeta más grande del Sistema Solar. Datos de respaldo locales.',
+            'Saturno (Saturn) es famoso por sus espectaculares anillos de hielo y roca. Es el segundo planeta más grande del Sistema Solar.',
         magnitud: 0.46,
         familia: 'Planeta',
         imagenUrl:
@@ -463,7 +463,7 @@ class ConstellationService {
         visibilidad: 'Requiere telescopio$ubicacionInfo',
         mejorhorario: '21:00 - 03:00 (requiere telescopio)',
         descripcion:
-            'Urano (Uranus) es un gigante de hielo con un característico color azul-verdoso. Su eje de rotación está inclinado casi 90 grados. Datos de respaldo locales.',
+            'Urano (Uranus) es un gigante de hielo con un característico color azul-verdoso. Su eje de rotación está inclinado casi 90 grados. ',
         magnitud: 5.68,
         familia: 'Planeta',
         imagenUrl:
@@ -476,7 +476,7 @@ class ConstellationService {
         visibilidad: 'Requiere telescopio$ubicacionInfo',
         mejorhorario: '22:00 - 04:00 (requiere telescopio)',
         descripcion:
-            'Neptuno (Neptune) es el planeta más lejano del Sol, un gigante de hielo con los vientos más fuertes del Sistema Solar. Datos de respaldo locales.',
+            'Neptuno (Neptune) es el planeta más lejano del Sol, un gigante de hielo con los vientos más fuertes del Sistema Solar.',
         magnitud: 7.78,
         familia: 'Planeta',
         imagenUrl:

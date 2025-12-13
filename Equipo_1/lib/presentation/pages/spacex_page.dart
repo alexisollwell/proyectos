@@ -230,25 +230,25 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
     );
   }
 
-  Widget _buildCarruselContent(List<Constelacion> planetas) {
-    return Column(
-      children: [
-        _buildPageIndicator(planetas.length),
-        Expanded(
-          flex: 3,
-          child: PageView.builder(
-            controller: _pageController,
-            itemCount: planetas.length,
-            itemBuilder: (context, index) {
-              return _buildPlanetaCard(planetas[index], index);
+Widget _buildCarruselContent(List<Constelacion> planetas) {
+  return Column(
+    children: [
+      _buildPageIndicator(planetas.length),
+
+      // 🔹 MITAD SUPERIOR – PLANETAS
+      Expanded(
+        child: PageView.builder(
+          controller: _pageController,
+          itemCount: planetas.length,
+          itemBuilder: (context, index) {
+            return _buildPlanetaUnificado(planetas[index], index);
             },
           ),
         ),
 
-        Expanded(flex: 2, child: _buildDetallePlaneta(planetas[_currentPage])),
-      ],
-    );
-  }
+    ],
+  );
+}
 
   Widget _buildPageIndicator(int count) {
     return Container(
@@ -278,7 +278,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), //aqui modifique de 10 y 20
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 161, 167, 254),
         borderRadius: BorderRadius.circular(20),
@@ -301,7 +301,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(14), //20
             decoration: BoxDecoration(
               // ignore: deprecated_member_use
               color: ConstelacionUI.colorTipo(planeta).withOpacity(0.2),
@@ -309,7 +309,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
             ),
             child: Icon(
               ConstelacionUI.iconoPlaneta(planeta),
-              size: 40,
+              size: 32,
               color: ConstelacionUI.colorTipo(planeta),
             ),
           ),
@@ -363,7 +363,7 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
       padding: const EdgeInsets.all(16),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),//aqui modifique 20
         decoration: BoxDecoration(
           color: const Color.fromARGB(255, 180, 200, 236),
           borderRadius: BorderRadius.circular(15),
@@ -422,6 +422,138 @@ class _PaginaConstelacionState extends State<PaginaConstelacion> {
       ),
     );
   }
+
+  Widget _buildPlanetaUnificado(Constelacion planeta, int index) {
+  final isCurrent = index == _currentPage;
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 180, 200, 236),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isCurrent ? 0.25 : 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // 🔹 ICONO PLANETA
+            Container(
+              padding: const EdgeInsets.all(22),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color:
+                    ConstelacionUI.colorTipo(planeta).withOpacity(0.2),
+              ),
+              child: Icon(
+                ConstelacionUI.iconoPlaneta(planeta),
+                size: 48,
+                color: ConstelacionUI.colorTipo(planeta),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // 🔹 NOMBRES
+            Text(
+              planeta.nombreSoloEspanol,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 55, 66, 137),
+              ),
+            ),
+
+            Text(
+              planeta.nombreSoloIngles,
+              style: const TextStyle(
+                fontSize: 14,
+                fontStyle: FontStyle.italic,
+                color: Color.fromARGB(255, 77, 84, 209),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // 🔹 VISIBILIDAD
+            Column(
+              children: [
+                Icon(
+                  ConstelacionUI.iconoVisibilidad(planeta),
+                  size: 18,
+                  color: ConstelacionUI.colorVisibilidad(planeta),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                  planeta.visibilidad,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  style: TextStyle(
+                    color: ConstelacionUI.colorVisibilidad(planeta),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ]
+            ),
+
+            const SizedBox(height: 20),
+
+        Divider(
+          thickness: 1,
+          color: Color.fromARGB(255, 120, 130, 200),
+        ),
+
+        const SizedBox(height: 20),
+
+
+            // 🔹 INFO DETALLADA
+            _buildInfoDetalle(
+              icon: FontAwesomeIcons.clock,
+              title: "Mejor Horario",
+              value: planeta.mejorhorario,
+            ),
+
+            _buildInfoDetalle(
+              icon: FontAwesomeIcons.users,
+              title: "Tipo",
+              value: planeta.familia,
+            ),
+
+            _buildInfoDetalle(
+              icon: FontAwesomeIcons.chartLine,
+              title: "Magnitud",
+              value: planeta.magnitud.toStringAsFixed(2),
+            ),
+
+            const SizedBox(height: 16),
+
+            // 🔹 DESCRIPCIÓN
+            Text(
+              planeta.descripcion,
+              textAlign: TextAlign.justify,
+              style: const TextStyle(
+                fontSize: 14,
+                height: 1.4,
+                color: Color.fromARGB(255, 55, 66, 137),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 
   Widget _buildInfoDetalle({
     required IconData icon,

@@ -65,14 +65,17 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
     }
   }
 
-  void _centerMapOnLocation() {
-    if (_mapController != null && _locationData != null) {
-      final lat = _locationData!.latitud ?? 19.4326;
-      final lng = _locationData!.longitud ?? -99.1332;
+void _centerMapOnLocation() {
+  if (_mapController != null && _locationData != null) {
+    final lat = _locationData!.latitud!;
+    final lng = _locationData!.longitud!;
 
-      _mapController!.move(LatLng(lat, lng), 12.0);
-    }
+    _mapController!.move(
+      LatLng(lat, lng),
+      15,
+    );
   }
+}
 
   List<Marker> _getMarkers() {
     if (_locationData != null) {
@@ -81,17 +84,41 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
 
       return [
         Marker(
-          point: LatLng(lat, lng),
-          width: 50,
-          height: 50,
-          child: Icon(
-            Icons.location_pin,
-            color: _locationData!.esGPS
-                ? Colors.green
-                : const Color.fromARGB(255, 55, 66, 137),
-            size: 40,
+  point: LatLng(lat, lng),
+  width: 60,
+  height: 60,
+  child: Stack(
+    alignment: Alignment.center,
+    children: [
+      Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: const LinearGradient(
+            colors: [
+              Color.fromARGB(255, 161, 167, 254),
+              Color.fromARGB(255, 55, 66, 137),
+            ],
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              blurRadius: 12,
+            ),
+          ],
         ),
+      ),
+      const Icon(
+        Icons.navigation,
+        color: Colors.white,
+        size: 20,
+      ),
+    ],
+  ),
+),
+
+
       ];
     }
     return [];
@@ -156,28 +183,31 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
     );
   }
 
-  Widget _buildMapSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              // ignore: deprecated_member_use
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: _loading ? _buildMapLoading() : _buildInteractiveMap(),
-        ),
+Widget _buildMapSection() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+    child: Container(
+      decoration: BoxDecoration(
+  borderRadius: BorderRadius.circular(24),
+  color: Colors.white,
+  boxShadow: [
+    BoxShadow(
+      color: Color(0xFF4E3CFF).withOpacity(0.25),
+      blurRadius: 18,
+      offset: Offset(0, 10),
+    ),
+  ],
+),
+
+      padding: const EdgeInsets.all(3),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: _loading ? _buildMapLoading() : _buildInteractiveMap(),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildInteractiveMap() {
     final lat = _locationData?.latitud ?? 19.4326;
@@ -188,18 +218,24 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
         FlutterMap(
           mapController: _mapController,
           options: MapOptions(
-            // ignore: deprecated_member_use
-            center: LatLng(lat, lng),
-            // ignore: deprecated_member_use
-            zoom: 12.0,
-            // ignore: deprecated_member_use
-            interactiveFlags: InteractiveFlag.all & ~InteractiveFlag.rotate,
-          ),
+                    initialCenter: LatLng(lat, lng),
+                    initialZoom: 15,
+                    maxZoom: 18,
+                    minZoom: 5,
+                  ),
+
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.proyectos',
+              urlTemplate:
+                  'https://api.mapbox.com/styles/v1/vianneycoffey/cmj3yzxsp00br01sl3ppr0x6b/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1Ijoidmlhbm5leWNvZmZleSIsImEiOiJjbWozeGc4aXEwbXJlM2ZxMnIxb25mZWFzIn0.3xuR9w1Dvqaa6BVf7wTPjQ',
+              additionalOptions: {
+                'accessToken': 'TU_MAPBOX_TOKEN',
+                'id': 'mapbox.mapbox-streets-v8',
+              },
             ),
+
+            
+
             MarkerLayer(markers: _getMarkers()),
           ],
         ),
@@ -292,11 +328,12 @@ class _IntegratedLocationPageState extends State<IntegratedLocationPage> {
             color: const Color.fromARGB(255, 55, 66, 137),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const FaIcon(
-            FontAwesomeIcons.solidCircle,
-            color: Color.fromARGB(255, 212, 212, 240),
-            size: 20,
-          ),
+          child: FaIcon(
+            FontAwesomeIcons.locationDot,
+              color: Colors.greenAccent,
+              size: 36, 
+            ),
+
         ),
         const SizedBox(width: 15),
         const Expanded(
